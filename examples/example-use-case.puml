@@ -1,0 +1,18 @@
+@startuml
+
+left to right direction
+
+actor Majitel
+actor Ridic as "Řidič"
+
+rectangle "Systém plánování dodávek" {
+    usecase "Naplánovat dodávku" as UC1
+    usecase "Zobrazit přidělené jízdy" as UC2
+    usecase "Dokončit jízdu" as UC3
+}
+
+Majitel --> UC1
+Ridic --> UC2
+Ridic --> UC3
+
+@enduml

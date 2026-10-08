@@ -1,0 +1,122 @@
+= Zadání semestrální práce
+:toc:
+:toc-title: Obsah
+:toclevels: 3
+:sectnums:
+
+== Informační systém pro správu firemních vozidel a plánování dodávek
+
+Předmětem projektu je informační systém pro nábytkářskou firmu, která pro rozvoz zákaznických objednávek využívá malé dodávky a pro další pracovní účely také osobní automobily.
+
+Firma již provozuje vlastní interní informační systém určený především pro řízení výroby. V tomto systému jsou evidovány také zákaznické objednávky, včetně údajů potřebných pro jejich doručení, například adres zákazníků a dalších informací souvisejících s objednávkou.
+
+Nově vznikající Systém nebude tyto údaje evidovat duplicitně. Potřebná data o objednávkách bude získávat prostřednictvím API existujícího interního systému.
+
+Hlavním cílem první etapy projektu je *plánování dodávek zákaznických objednávek*.
+
+V současné době je plánování využití firemních vozidel řešeno převážně pomocí telefonické komunikace a informací evidovaných na různých místech. S rostoucím počtem zakázek a vozidel vznikají problémy především při plánování rozvozů. Může dojít k vytvoření konfliktních rezervací jednoho vozidla nebo k naplánování přepravy, pro kterou vybrané vozidlo nemá dostatečnou kapacitu.
+
+Systém má proto v první etapě umožnit plánovat dodávky objednávek, přiřazovat k nim vhodná vozidla a kontrolovat, zda nedochází ke konfliktům v jejich využití.
+
+Firma používá osobní automobily a malé dodávky. U vozidel bude nutné evidovat parametry důležité pro posouzení jejich přepravní kapacity, například objem nákladového prostoru, nosnost a rozměry ložné plochy.
+
+Možnost detailního plánování rozmístění konkrétního nákladu uvnitř vozidla je zatím otevřeným požadavkem. O jeho případném zařazení bude rozhodnuto později s ohledem na cenu a časovou náročnost.
+
+Základní část Systému bude realizována jako *webová aplikace*. Ta bude sloužit pro plánování dodávek, přehled využití vozidel a další funkce, které budou do Systému postupně doplňovány v dalších etapách.
+
+Vedle webové aplikace bude existovat také *mobilní aplikace určená pouze pro řidiče*. Jejím účelem nebude kompletní správa Systému, ale jednoduchá práce s přidělenými jízdami.
+
+Mobilní aplikace musí umožnit práci také při dočasné ztrátě internetového připojení. Řidič tak bude moci například označit jízdu jako dokončenou i bez dostupného připojení. Po jeho obnovení se zaznamenané změny synchronizují se Systémem.
+
+Předpokládaný počet uživatelů je přibližně 25. Firma odbavuje přibližně 50 zakázek s doručením denně.
+
+== Uživatelé Systému
+
+=== Majitel
+
+Majitel bude využívat webovou aplikaci. Potřebuje mít přehled o plánovaných dodávkách a využití firemních vozidel.
+
+Systém mu musí umožnit zjistit, která vozidla jsou dostupná, která jsou již přiřazena k jiným dodávkám a zda je možné pro další objednávku zajistit vhodné vozidlo.
+
+=== Řidič
+
+Řidič bude využívat mobilní aplikaci.
+
+V aplikaci bude mít přístup k jízdám, které mu byly přiděleny, a k základním informacím potřebným pro jejich uskutečnění.
+
+U jednotlivé jízdy bude moci zaznamenat základní stav, například:
+
+* zahájení jízdy,
+* příjezd,
+* předání objednávky,
+* dokončení jízdy,
+* zrušení jízdy,
+* hlášení nehod nebo poškození auta.
+
+Mobilní aplikace musí umožnit provedení těchto úkonů také v offline režimu a následnou synchronizaci po obnovení internetového připojení.
+
+=== Dělník
+
+Dělníci budou další skupinou uživatelů webové aplikace. Budou pracovat s informacemi souvisejícími s připravovanými a plánovanými dodávkami podle svých oprávnění.
+
+Každý uživatel bude moci mít vlastní uživatelské nastavení, například preferované vozidlo nebo výchozí pohled v aplikaci.
+
+== Existující interní systém
+
+Firma již používá interní informační systém, který zajišťuje řízení výroby a evidenci zákaznických objednávek.
+
+Tento systém obsahuje také údaje potřebné pro plánování dodávek, například informace o objednávce a adresu zákazníka.
+
+Nový Systém bude potřebná data získávat prostřednictvím API a nebude je znovu ručně evidovat.
+
+== Interní použití Systému a podpora
+
+Systém bude koncipován jako B2E (Business-to-Employee) a bude určen výhradně pro interní použití zaměstnanci firmy. Jeho uživateli budou zaměstnanci firmy podle svých rolí a oprávnění. Zákazníci firmy nebudou mít do Systému přístup a nebudou jeho uživateli.
+
+Součástí Systému bude také podpora jeho uživatelů. Zaměstnanci využívající webovou aplikaci budou moci jejím prostřednictvím nahlásit chybu, požadavek nebo jiný problém související s používáním Systému. Řidiči budou mít možnost obdobný požadavek nahlásit přímo prostřednictvím mobilní aplikace.
+
+Nahlášené požadavky budou předávány pracovníkům společnosti, která Systém dodává a zajišťuje jeho technickou podporu.
+
+== Evidence STK a stavu vozidla
+
+Systém bude u vozidel sledovat termín platnosti STK.
+
+Další servisní úkony ani údržba vozidel nejsou součástí rozsahu Systému.
+
+Po příjezdu vozidla bude možné zaznamenat případná nová poškození. Systém musí uchovávat historii těchto záznamů a související logy.
+
+== Co přesně chceme od Systému
+
+. Aby v první etapě řešil především plánování dodávek zákaznických objednávek.
+. Aby byl jeho hlavní uživatelský přístup realizován prostřednictvím webové aplikace.
+. Aby evidoval osobní automobily a malé dodávky používané firmou.
+. Aby u vozidel evidoval parametry potřebné pro posouzení přepravní kapacity, například objem nákladového prostoru, nosnost a rozměry ložné plochy.
+. Aby získával informace o zákaznických objednávkách a adresách zákazníků prostřednictvím API existujícího interního systému.
+. Aby nebylo nutné údaje o objednávkách a zákaznících zadávat do nového Systému opakovaně.
+. Aby umožňoval plánovat použití vozidel pro jednotlivé dodávky objednávek.
+. Aby kontroloval dostupnost vozidla v požadovaném termínu.
+. Aby zabránil vytvoření konfliktních rezervací jednoho vozidla.
+. Aby při plánování umožňoval posoudit, zda kapacita vozidla odpovídá požadavkům konkrétní dodávky.
+. Aby poskytoval mobilní aplikaci určenou pouze pro řidiče.
+. Aby mobilní aplikace umožňovala řidiči pracovat s přidělenými jízdami.
+. Aby umožňovala zaznamenat základní stav jízdy, například zahájení, příjezd, předání, dokončení nebo zrušení.
+. Aby mobilní aplikace umožňovala provést tyto úkony také bez internetového připojení.
+. Aby se změny provedené v offline režimu po obnovení připojení synchronizovaly se Systémem.
+. Aby neřešil plánování ani průběh montáže nábytku.
+. Aby umožňoval uživatelům používat vlastní uživatelská nastavení.
+. Aby umožňoval sledovat termín platnosti STK jednotlivých vozidel.
+. Aby umožňoval po příjezdu vozidla zaznamenat případné poškození.
+. Aby uchovával historii a logy související se stavem vozidel a provedenými změnami.
+. Aby byl určen pouze pro interní použití zaměstnanci firmy.
+. Aby umožňoval interním uživatelům prostřednictvím webové aplikace hlásit chyby, požadavky a problémy pracovníkům zajišťujícím podporu Systému.
+. Aby uchovával historická data o jízdách a nákladech minimálně po dobu dvou let.
+. Aby byl dimenzován přibližně pro 25 uživatelů a provoz přibližně 50 zakázek denně.
+. Aby neevidoval řidičská oprávnění, zdravotní a profesní prohlídky, směny, dovolené ani nemocenské, protože tyto oblasti jsou již řešeny v existujících interních systémech firmy.
+
+== Otevřené požadavky a další etapy
+
+Detailní plánování rozmístění nákladu uvnitř vozidla zatím není závaznou součástí požadavků a o jeho případném zařazení bude rozhodnuto později.
+
+První etapa projektu bude zaměřena především na plánování dodávek objednávek. Po dokončení této části se bude systém rozšiřovat o další funkce související se správou vozidel, přehledy, náklady a dalšími oblastmi.
+
+Další požadavky budou doplňovány podle výsledků další analýzy a konzultací se zákazníkem.
