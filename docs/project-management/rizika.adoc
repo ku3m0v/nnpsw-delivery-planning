@@ -1,0 +1,75 @@
+= Registr rizik
+:toc:
+:toc-title: Obsah
+:sectnums:
+
+Tento dokument obsahuje hlavní rizika spojená s průběhem semestrálního projektu a způsob jejich omezení.
+
+Registr rizik bude v průběhu projektu podle potřeby aktualizován.
+
+[cols="1,3,1,1,2,3,3", options="header"]
+|===
+|ID
+|Riziko
+|Pravděpodobnost
+|Dopad
+|Odpovědnost
+|Preventivní opatření
+|Reakce při vzniku
+
+|R-01
+|Nedostupnost člena týmu
+|Střední
+|Vysoký
+|Celý tým
+|Veškeré důležité výstupy jsou průběžně ukládány ve společném GitHub repozitáři a úkoly jsou evidovány v Trello. Klíčové části projektu nesmí být známé pouze jednomu členovi týmu.
+|Rozpracovaný úkol převezme jiný člen týmu na základě dostupné dokumentace, historie změn a aktuálního stavu úkolu.
+
+|R-02
+|Nedodržení termínu úkolu
+|Střední
+|Vysoký
+|Vedoucí týmu
+|Každý úkol má v Trello stanovený termín a odpovědnou osobu. Stav úkolů je průběžně aktualizován.
+|Úkol bude přerozdělen, případně budou upraveny priority ostatních úkolů tak, aby nebyl ohrožen následující výstup nebo milník.
+
+|R-03
+|Nejasné nebo neúplné požadavky zákazníka
+|Vysoká
+|Vysoký
+|Analytici
+|Nejasné požadavky se zapisují jako otevřené otázky. Tým nebude chybějící informace nahrazovat vlastními předpoklady bez jejich označení.
+|Nejasnost bude konzultována se zákazníkem nebo cvičícím a následně budou aktualizovány všechny dotčené části analýzy.
+
+|R-04
+|Nekonzistence mezi jednotlivými analytickými artefakty
+|Střední
+|Vysoký
+|Analytici
+|Používat jednotný slovník pojmů a při tvorbě každého nového artefaktu kontrolovat návaznost na zadání, požadavky a předchozí modely.
+|Opravit nesrovnalosti a následně zkontrolovat všechny navazující požadavky, Use Case scénáře a diagramy.
+
+|R-05
+|Ztráta nebo nechtěné přepsání projektových souborů
+|Nízká
+|Vysoký
+|Dokumentarista
+|Veškerá projektová dokumentace a zdrojové soubory diagramů jsou verzovány pomocí Gitu a ukládány na GitHub.
+|Obnovit správnou verzi souboru z historie repozitáře.
+
+|R-06
+|Konflikt změn při současné práci více členů týmu
+|Střední
+|Střední
+|Dokumentarista
+|Členové týmu před zahájením práce aktualizují lokální repozitář a pokud možno nebudou současně upravovat stejnou část dokumentace.
+|Vyřešit merge conflict, porovnat obě změny a společně ověřit výslednou verzi dokumentu.
+
+|R-07
+|Změna zadání v průběhu semestru
+|Vysoká
+|Střední
+|Vedoucí týmu + analytici
+|Požadavky, scénáře a modely jsou průběžně verzovány a vzájemně propojeny tak, aby bylo možné zjistit dopad změny.
+|Provést analýzu dopadu změny a aktualizovat dotčené požadavky, Use Case scénáře, diagramy a další dokumentaci.
+|===
