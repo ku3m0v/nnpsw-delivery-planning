@@ -1,0 +1,63 @@
+= Týmové role a odpovědnosti
+:toc:
+:toc-title: Obsah
+:sectnums:
+
+Tento dokument popisuje rozdělení rolí a hlavních odpovědností členů projektového týmu.
+
+== Vedoucí týmu
+
+*Evgenii Kuzmov*
+
+Hlavní odpovědnosti:
+
+* koordinace práce týmu,
+* kontrola plnění úkolů,
+* komunikace se zákazníkem / cvičícím,
+* reprezentace týmu při prezentaci.
+
+== Analytik 1
+
+*Bobovnykov Nazar*
+
+Hlavní odpovědnosti:
+
+* zpracování analytických úloh,
+* práce s požadavky, Use Case a modely,
+* spolupráce na validaci analýzy.
+
+== Analytik 2
+
+*Faleeva Anastasiia*
+
+Hlavní odpovědnosti:
+
+* zpracování analytických úloh,
+* práce s požadavky, Use Case a modely,
+* spolupráce na validaci analýzy.
+
+== Dokumentarista 1
+
+*Mytro Oleksandr*
+
+Hlavní odpovědnosti:
+
+* vedení a aktualizace projektové dokumentace,
+* kontrola konzistence dokumentů,
+* správa výstupů jednotlivých etap.
+
+== Dokumentarista 2
+
+*Evgenii Kuzmov*
+
+Hlavní odpovědnosti:
+
+* vedení a aktualizace projektové dokumentace,
+* pomoc s verzováním dokumentace a diagramů,
+* příprava podkladů pro prezentace.
+
+== Společná odpovědnost týmu
+
+Role určují hlavní odpovědnosti jednotlivých členů, všechny důležité výstupy projektu však vznikají ve spolupráci celého týmu.
+
+Každý člen týmu musí mít přehled o aktuálním stavu projektu a rozumět návaznosti své práce na ostatní části analýzy.
