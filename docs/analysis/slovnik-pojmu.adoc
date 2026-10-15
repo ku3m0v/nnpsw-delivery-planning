@@ -22,11 +22,11 @@ Dodavatel systému (Technická podpora)::
 
 == Doménové a logistické pojmy
 
-Zákaznická objednávka (Zakázka):: 
+Objednávka (Zakázka):: 
   Požadavek zákazníka na doručení nábytku. Obsahuje identifikační údaje, adresu doručení a parametry nákladu. Objednávky jsou primárně evidovány v existujícím interním systému výroby
 
 Dodávka:: 
-  Naplánovaný proces doručení jedné nebo více zákaznických objednávek konkrétním vozidlem v určeném časovém okně
+  Naplánovaný proces doručení jedné nebo více objednávek konkrétním vozidlem v určeném časovém okně
 
 Jízda:: 
   Konkrétní úkol přiřazený řidiči a vozidlu v rámci naplánované dodávky. Jízda prochází definovanými stavy (Zahájena, Příjezd, Předáno, Dokončena, Zrušena)
