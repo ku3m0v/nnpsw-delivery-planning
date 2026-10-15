@@ -6,82 +6,82 @@
 == Role a uživatelé systému
 
 Majitel:: 
-  Uživatel webové aplikace s nejvyšším přehledem o provozu. Sleduje vytížení vozového parku, dostupnost vozidel a celkový stav plánovaných dodávek.
+  Uživatel webové aplikace s nejvyšším přehledem o provozu. Sleduje vytížení vozového parku, dostupnost vozidel a celkový stav plánovaných dodávek
 
 Dělník:: 
-  Uživatel webové aplikace, který pracuje se všemi informacemi o připravovaných a plánovaných dodávkách podle svých oprávnění (např. příprava nábytku k nakládce).
+  Uživatel webové aplikace, který pracuje se všemi informacemi o připravovaných a plánovaných dodávkách podle svých oprávnění (např. příprava nábytku k nakládce)
 
 Řidič:: 
-  Uživatel mobilní aplikace odpovědný za realizaci přidělených jízd, zaznamenávání stavu jízdy (zahájení, příjezd, předání apod.) a hlášení škod/nehod.
+  Uživatel mobilní aplikace odpovědný za realizaci přidělených jízd, zaznamenávání stavu jízdy (zahájení, příjezd, předání apod.) a hlášení škod/nehod
 
 Interní uživatel:: 
-  Zaměstnanci firmy (Majitel, Dělník, Řidič), kteří mají přístup do Systému podle svých oprávnění.
+  Zaměstnanci firmy (Majitel, Dělník, Řidič), kteří mají přístup do Systému podle svých oprávnění
 
 Dodavatel systému (Technická podpora):: 
-  Pracovníci externí společnosti, která Systém vyvíjí a zajišťuje jeho provoz, údržbu a řešení nahlášených chyb/požadavků (my).
+  Pracovníci externí společnosti, která Systém vyvíjí a zajišťuje jeho provoz, údržbu a řešení nahlášených chyb/požadavků (my)
 
 == Doménové a logistické pojmy
 
 Zákaznická objednávka (Zakázka):: 
-  Požadavek zákazníka na doručení nábytku. Obsahuje identifikační údaje, adresu doručení a parametry nákladu. Objednávky jsou primárně evidovány v existujícím interním systému výroby.
+  Požadavek zákazníka na doručení nábytku. Obsahuje identifikační údaje, adresu doručení a parametry nákladu. Objednávky jsou primárně evidovány v existujícím interním systému výroby
 
 Dodávka:: 
-  Naplánovaný proces doručení jedné nebo více zákaznických objednávek konkrétním vozidlem v určeném časovém okně.
+  Naplánovaný proces doručení jedné nebo více zákaznických objednávek konkrétním vozidlem v určeném časovém okně
 
 Jízda:: 
-  Konkrétní úkol přiřazený řidiči a vozidlu v rámci naplánované dodávky. Jízda prochází definovanými stavy (Zahájena, Příjezd, Předáno, Dokončena, Zrušena).
+  Konkrétní úkol přiřazený řidiči a vozidlu v rámci naplánované dodávky. Jízda prochází definovanými stavy (Zahájena, Příjezd, Předáno, Dokončena, Zrušena)
 
 Vozidlo (Firemní auto):: 
-  Dopravní prostředek používaný firmou. Dělí se na malé dodávky (určené pro rozvoz a montáže) a osobní automobily (určené převážně pro obchodníky).
+  Dopravní prostředek používaný firmou. Dělí se na malé dodávky (určené pro rozvoz a montáže) a osobní automobily (určené převážně pro obchodníky)
 
 Přepravní kapacita vozidla:: 
-  Fyzické limity vozidla určující, jaký náklad je schopno uvézt. Je definována parametricky: objemem nákladového prostoru (m³), nosností (kg) a rozměry ložné plochy (délka × šířka × výška).
+  Fyzické limity vozidla určující, jaký náklad je schopno uvézt. Je definována parametricky: objemem nákladového prostoru (m³), nosností (kg) a rozměry ložné plochy (délka × šířka × výška)
 
 Konfliktní rezervace (Přebukování / Overbooking):: 
-  Chybový stav v plánování, kdy je jedno vozidlo přiřazeno na dvě překrývající se jízdy ve stejný čas, nebo kdy plánovaný náklad překračuje přepravní kapacitu vozidla.
+  Chybový stav v plánování, kdy je jedno vozidlo přiřazeno na dvě překrývající se jízdy ve stejný čas, nebo kdy plánovaný náklad překračuje přepravní kapacitu vozidla
 
 STK (Státní technická kontrola):: 
-  Zákonem stanovená pravidelná prohlídka technického stavu vozidla. Systém eviduje a hlídá datum její platnosti u každého vozidla.
+  Zákonem stanovená pravidelná prohlídka technického stavu vozidla. Systém eviduje a hlídá datum její platnosti u každého vozidla
 
 Poškození / Nehoda vozidla:: 
-  Záznam o fyzické vadě, poškrábání nebo havárii auta vzniklé během provozu nebo zjištěné po příjezdu vozidla.
+  Záznam o fyzické vadě, poškrábání nebo havárii auta vzniklé během provozu nebo zjištěné po příjezdu vozidla
 
 == Systémové a technické pojmy
 
 Systém:: 
-  Nově vyvíjený informační systém pro správu vozidel a plánování dodávek, skládající se z webové aplikace a mobilní aplikace pro řidiče.
+  Nově vyvíjený informační systém pro správu vozidel a plánování dodávek, skládající se z webové aplikace a mobilní aplikace pro řidiče
 
 Interní systém:: 
-  Původní informační systém firmy určený pro řízení výroby a evidenci zákaznických objednávek, se kterým nový Systém komunikuje.
+  Původní informační systém firmy určený pro řízení výroby a evidenci zákaznických objednávek, se kterým nový Systém komunikuje
 
 API (Application Programming Interface):: 
-  Programové rozhraní existujícího interního systému, ze kterého nový Systém automaticky načítá data o objednávkách a adresách zákazníků bez nutnosti duplicitního zadávání.
+  Programové rozhraní existujícího interního systému, ze kterého nový Systém automaticky načítá data o objednávkách a adresách zákazníků bez nutnosti duplicitního zadávání
 
 B2E (Business-to-Employee):: 
-  Koncepce softwaru určeného výhradně pro interní použití zaměstnanci firmy. Koncoví zákazníci do systému nemají přístup.
+  Koncepce softwaru určeného výhradně pro interní použití zaměstnanci firmy. Koncoví zákazníci do systému nemají přístup
 
 Offline režim:: 
-  Schopnost mobilní aplikace pro řidiče provádět klíčové úkony (změna stavu jízdy, hlášení poškození) i v případě dočasné ztráty internetového připojení.
+  Schopnost mobilní aplikace pro řidiče provádět klíčové úkony (změna stavu jízdy, hlášení poškození) i v případě dočasné ztráty internetového připojení
 
 Synchronizace data:: 
-  Automatický proces přenosu a sloučení změn provedených v offline režimu na centrální server po obnovení internetového připojení.
+  Automatický proces přenosu a sloučení změn provedených v offline režimu na centrální server po obnovení internetového připojení
 
 Uživatelské nastavení (Personifikace):: 
-  Možnost uživatele přizpůsobit si chování a vzhled aplikace (např. preferované vozidlo, výchozí pohled, jazyk rozhraní CZ/EN).
+  Možnost uživatele přizpůsobit si chování a vzhled aplikace (např. preferované vozidlo, výchozí pohled, jazyk rozhraní CZ/EN)
 
 Ticketing / Hlášení problémů:: 
-  Modul ve webové i mobilní aplikaci umožňující interním uživatelům odeslat hlášení o chybě nebo požadavek na technickou podporu.
+  Modul ve webové i mobilní aplikaci umožňující interním uživatelům odeslat hlášení o chybě nebo požadavek na technickou podporu
 
 Auditní log / Historie:: 
-  Bezpečnostní záznamy o provedených změnách v systému, historii stavů vozidel, jízd a nákladů uchovávané minimálně po dobu 2 let.
+  Bezpečnostní záznamy o provedených změnách v systému, historii stavů vozidel, jízd a nákladů uchovávané minimálně po dobu 2 let
 
 == Projektové a analytické pojmy
 
 První etapa (MVP – Minimum Viable Product):: 
-  Úvodní fáze realizace projektu zaměřená na klíčové funkce: plánování dodávek, hlídání kapacit a kolizí, správa STK, hlášení škod a mobilní aplikace pro řidiče.
+  Úvodní fáze realizace projektu zaměřená na klíčové funkce: plánování dodávek, hlídání kapacit a kolizí, správa STK, hlášení škod a mobilní aplikace pro řidiče
 
 Webová aplikace:: 
-  Hlavní část Systému přístupná přes běžný webový prohlížeč. Je určena pro Majitele a Dělníky. Slouží k plánování dodávek, správě a přehledu vozového parku, zadávání uživatelských nastavení a komunikaci s technickou podporou.
+  Hlavní část Systému přístupná přes běžný webový prohlížeč. Je určena pro Majitele a Dělníky. Slouží k plánování dodávek, správě a přehledu vozového parku, zadávání uživatelských nastavení a komunikaci s technickou podporou
 
 Mobilní aplikace:: 
   Klientská aplikace určená výhradně pro Řidiče. Slouží k práci s přidělenými jízdami, změně stavů doručení a hlášení poškození
