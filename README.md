@@ -8,7 +8,7 @@ Hlavním cílem první etapy projektu je **plánování dodávek objednávek**, 
 
 Úkoly v rámci projektu evidujeme a rozdělujeme pomocí Trello:
 
-[Trello – Cinazes](https://trello.com/invite/b/6ac7875a20c978b0a22ad65d/ATTI57d0a0857b720121b6c615207fe8997b5B62DAF6/cinazes)
+[Trello – Cinazes](https://trello.com/b/IAkfWEJG/%C4%8Dinazes)
 
 GitHub slouží pro ukládání a verzování projektové dokumentace, analytických modelů, UML diagramů a dalších artefaktů vznikajících během analýzy.
 
