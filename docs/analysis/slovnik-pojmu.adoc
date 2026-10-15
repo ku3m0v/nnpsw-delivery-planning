@@ -3,8 +3,6 @@
 :toc-title: Obsah
 :sectnums:
 
-Tento dokument obsahuje definice základních doménových, systémových a projektových pojmů používaných napříč celou projektovou dokumentací (analýza, požadavky, Use Case scénáře, UML diagramy a registr rizik).
-
 == Role a uživatelé systému
 
 Majitel:: 
