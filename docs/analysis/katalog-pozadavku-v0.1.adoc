@@ -1,0 +1,822 @@
+= Katalog požadavků v0.1
+:lang: cs
+:toc:
+:toc-title: Obsah
+:toclevels: 2
+:sectnums:
+:revnumber: 0.1
+:revdate: 2026-10-15
+:repo: https://github.com/ku3m0v/nnpsw-delivery-planning
+:commit: 57b76690ad5a69c4310a4e22ddd12c6492c8fb6f
+:zadani: {repo}/blob/{commit}/docs/analysis/zadani.adoc
+
+== Účel a stav dokumentu
+
+Pracovní katalog pro 4. týden projektu KST/NNPSW vymezuje scope, funkční a nefunkční požadavky, navržené priority a akceptační kritéria.
+Tato aktualizace v0.1 zapracovává odpovědi předané uživatelem dne 15. 10. 2026 a následné upřesnění kapacitního omezení a potvrzování změn stavu řidičem.
+Obsahuje *39 funkčních a 7 nefunkčních požadavků*.
+
+Všechny záznamy mají společný stav *Návrh k validaci*.
+Doplněná rozhodnutí jsou evidována jako zdroje U01 až U10; jejich zapracování neznamená schválení celého katalogu ani navržených priorit.
+Identifikátory FP-01 až FP-29 a NFP-01 až NFP-06 byly zachovány, nové požadavky mají navazující čísla.
+
+Výchozí revize repozitáře `{commit}` obsahuje analytickou dokumentaci a ukázkové diagramy, nikoliv implementaci aplikace nebo automatizované testy.
+Kontrola v tomto dokumentu se týká konzistence specifikace. Akceptační kritéria jsou podkladem pro budoucí ověření aplikace.
+
+== Rozsah systému (scope)
+
+=== Cíl a první etapa
+
+Systém má nábytkářské firmě umožnit plánování dodávek objednávek podle dostupnosti a kapacity firemních vozidel a zabránit konfliktním rezervacím.
+Objednávky a doručovací údaje získává z existujícího interního systému přes API.
+Podle doplnění bude systém plánovat dodávky a přidělovat jízdy řidičům automaticky; ruční změny plánu provádí pouze majitel.
+
+Jádro první etapy tvoří plánování, přiřazení vozidla, kontrola dostupnosti a kapacity a prevence konfliktů.
+Přesné etapové zařazení automatizace a dalších funkcí zůstává k potvrzení v O-11.
+
+=== Celkový rozsah
+
+* Evidence osobních automobilů a malých dodávek a jejich přepravních parametrů.
+* Plánování dodávek včetně více objednávek v jedné jízdě a rozdělení jedné objednávky do více jízd.
+* Rezervace pouze vozidel v intervalu naložení až vyložení; samostatné rezervace řidičů se nevytvářejí.
+* Vyhodnocení kapacity, upozornění na překročení a blokování uložení takového plánu.
+* Webový přístup majitele a dělníka podle jejich oprávnění a přehledy majitele.
+* Mobilní přístup řidičů na osobních telefonech s iOS nebo Androidem, práce s přidělenými jízdami, offline úkony a automatická synchronizace.
+* Oznámení pokusu o změnu stavu jízdy řidiči na cestě a uplatnění navržené změny až po jeho potvrzení.
+* Platnost STK, poškození vozidel, historie a související logy; logické zrušení jízd se zachováním historie.
+* Uživatelská nastavení a hlášení problémů z obou aplikací technické podpoře dodavatele.
+* Uchování evidovaných dat alespoň dva roky, včetně finančních nákladů; u dat objednávky se lhůta počítá od založení objednávky.
+
+=== Mimo rozsah a nerozhodnuté rozšíření
+
+* Mimo rozsah jsou plánování a průběh montáže nábytku, další servisní úkony a údržba vozidel a evidence řidičských oprávnění, zdravotních a profesních prohlídek, směn, dovolených a nemocenských.
+* Zákazníci firmy nejsou uživateli systému. Pracovníci podpory dodavatele jsou příjemci hlášení; jejich přímé přihlašování není požadováno.
+* Detailní rozmístění konkrétního nákladu ve vozidle zůstává nezávazným otevřeným rozšířením.
+* Automatické plánování neznamená samo o sobě požadavek na optimalizaci tras, GPS sledování nebo navigaci. Fakturace není odvozena pouze ze zmínky o finančních nákladech.
+
+=== Uživatelé a vnější systém
+
+* *Majitel:* webové přehledy a výhradní právo provádět ruční změny plánu.
+* *Řidič:* mobilní práce s přidělenými jízdami, události jejich průběhu, hlášení a potvrzování navržených změn stavu.
+* *Dělník:* webový přístup k připravovaným a plánovaným dodávkám podle dosud neuzavřené matice oprávnění.
+* *Interní systém:* vnější zdroj seznamu objednávek a souvisejících údajů přes API.
+* *Podpora dodavatele:* příjemce hlášení problémů.
+
+Automatický plánovač je funkcí systému, nikoliv novou lidskou rolí.
+Právo majitele měnit plán nenahrazuje potvrzení řidiče při změně stavu jízdy na cestě. Záznam vlastních událostí jízdy řidičem není ruční úpravou plánu.
+
+== Priority a akceptační kritéria
+
+[cols="1,2,5",options="header"]
+|===
+|Priorita |Název |Význam
+|P1 |Vysoká |Jádro plánování, jeho podklady a klíčové podmínky přístupu, integrity a provozu.
+|P2 |Střední |Další požadované provozní funkce, mobilní práce řidiče, stav vozidla a podpora.
+|P3 |Nízká |Uživatelský komfort; v této verzi vlastní uživatelská nastavení.
+|===
+
+Priority jsou analytickým návrhem k potvrzení. Nižší priorita neruší požadavek ze zadání a neurčuje automaticky pozdější etapu.
+
+*Akceptační kritérium* (také „kritérium přijetí“) popisuje ověřitelnou podmínku splnění požadavku.
+Nyní se zapisuje a projednává; provádět přejímací testy hotové aplikace bude možné až po implementaci.
+Například u vozidla s rezervací 10:00–12:00 pokus o druhou rezervaci 11:00–13:00 nesmí vytvořit druhou platnou rezervaci.
+Uvedené časy a číselné hodnoty v kritériích jsou testovací příklady, nikoliv další obchodní pravidla.
+Kritéria závislá na dosud otevřené otázce jsou předběžná a po jejím rozhodnutí se doplní.
+
+== Zdroje a zapracovaná upřesnění
+
+=== Výchozí dokumentace
+
+Označení Z01 až Z10 odkazují na zadání v uvedené revizi repozitáře.
+Soubory v `examples/` jsou výukové ukázky a netvoří samostatný závazný zdroj požadavků.
+
+[cols="1,5",options="header"]
+|===
+|Zdroj |Část zadání
+|[[Z01]]Z01 |{zadani}#L9-L23[Účel, integrace, plánování a kapacita vozidel].
+|[[Z02]]Z02 |{zadani}#L25-L31[Web, mobilní aplikace, offline režim a velikost provozu].
+|[[Z03]]Z03 |{zadani}#L35-L39[Majitel a přehledy].
+|[[Z04]]Z04 |{zadani}#L41-L56[Řidič, jízdy, události a offline práce].
+|[[Z05]]Z05 |{zadani}#L58-L62[Dělník a vlastní nastavení].
+|[[Z06]]Z06 |{zadani}#L64-L70[Existující interní systém a API].
+|[[Z07]]Z07 |{zadani}#L72-L78[Interní přístup a podpora].
+|[[Z08]]Z08 |{zadani}#L80-L86[STK, poškození, historie a logy].
+|[[Z09]]Z09 |{zadani}#L88-L114[Souhrnný seznam 25 bodů zadání].
+|[[Z10]]Z10 |{zadani}#L116-L122[Otevřené rozšíření a další etapy].
+|===
+
+=== Doplnění předané uživatelem dne 15. 10. 2026
+
+Doplnění níže je dalším zdrojem této specifikace. Není vydáváno za obsah již uložený ve výchozí revizi GitHubu.
+Pokud zpřesňuje původní zadání, aktuální katalog používá toto zpřesnění a původní zdroj ponechává pro dohledatelnost.
+
+[cols="1,1,5",options="header"]
+|===
+|Zdroj |Odpověď |Zapracovaný obsah
+|[[U01]]U01 |1 |Systém bude automaticky plánovat dodávky a přidělovat jízdy řidičům.
+|[[U02]]U02 |2 |Jedna jízda může obsahovat více objednávek; jednu objednávku lze rozdělit do více jízd. Rezervace trvá od naložení nábytku do vyložení a týká se pouze vozidla.
+|[[U03]]U03 |3 |Údaje pro posouzení zahrnují rozměry, hmotnost a přetížení; API vrací seznam objednávek. Nejednoznačné vyjádření k varování a blokování bylo upřesněno v U09.
+|[[U04]]U04 |4 |Zrušená jízda zůstává historicky evidována včetně souvisejících logů; zrušení je logické.
+|[[U05]]U05 |5 |Zrušená jízda zůstává ve stavu zrušení. Změna stavu během jízdy vyžaduje potvrzení řidiče. Synchronizace po obnovení připojení je automatická.
+|[[U06]]U06 |6 |Náklady jsou finanční. Uchování se týká všech dat po dobu dvou let; lhůta se počítá od založení objednávky. Původní minimální dvouletá doba není zkrácena.
+|[[U07]]U07 |7 |Web a mobilní aplikace pro osobní telefony řidičů s iOS a Androidem. Souběžnost a rozsah první etapy nebyly touto odpovědí určeny.
+|[[U08]]U08 |8 |Plán dodávek smí ručně měnit majitel. Odpověď doplňuje otázku na role měnící plán.
+|[[U09]]U09 |Následné upřesnění |Při překročení kapacity systém upozorní a zablokuje uložení plánu; nejde pouze o informativní varování.
+|[[U10]]U10 |Následné upřesnění |Řidič obdrží oznámení o pokusu změnit stav a navržený stav musí sám potvrdit.
+|===
+
+== Přehled katalogu
+
+Sloupec otázek ukazuje zbývající upřesnění; nezpochybňuje již zapsané odpovědi. O-11 se týká etapového zařazení celého katalogu.
+
+[cols="1,4,1,2",options="header"]
+|===
+|ID |Název |Priorita |Navazující otázky
+|<<FP-01>> |Evidence firemních vozidel |P1 |O-01
+|<<FP-02>> |Evidence přepravních parametrů |P1 |O-03
+|<<FP-03>> |Získání objednávek z interního systému |P1 |O-04
+|<<FP-04>> |Naplánování dodávky objednávky |P1 |O-02, O-12
+|<<FP-05>> |Přiřazení vozidla k dodávce |P1 |O-02, O-03
+|<<FP-06>> |Kontrola časové dostupnosti vozidla |P1 |O-02, O-05
+|<<FP-07>> |Zabránění konfliktním rezervacím |P1 |O-02, O-05
+|<<FP-08>> |Vyhodnocení přepravní kapacity |P1 |O-03, O-04
+|<<FP-09>> |Přehled plánovaných dodávek pro majitele |P1 |—
+|<<FP-10>> |Přehled využití vozidel pro majitele |P1 |O-02
+|<<FP-11>> |Zobrazení přidělených jízd |P2 |O-12
+|<<FP-12>> |Zobrazení informací potřebných k jízdě |P2 |O-04
+|<<FP-13>> |Zaznamenání zahájení jízdy |P2 |O-05
+|<<FP-14>> |Zaznamenání příjezdu |P2 |O-05
+|<<FP-15>> |Zaznamenání předání objednávky |P2 |O-02, O-05
+|<<FP-16>> |Zaznamenání dokončení jízdy |P2 |O-05
+|<<FP-17>> |Zaznamenání zrušení jízdy |P2 |O-05
+|<<FP-18>> |Hlášení nehody |P2 |O-05
+|<<FP-19>> |Záznam poškození vozidla |P2 |O-01, O-05
+|<<FP-20>> |Zaznamenání úkonů bez připojení |P2 |O-05, O-06
+|<<FP-21>> |Automatická synchronizace offline změn |P2 |O-06
+|<<FP-22>> |Přístup dělníka k údajům o dodávkách |P2 |O-01
+|<<FP-23>> |Vlastní uživatelské nastavení |P3 |O-07
+|<<FP-24>> |Evidence termínu platnosti STK |P2 |O-01
+|<<FP-25>> |Historie poškození vozidla |P2 |O-08
+|<<FP-26>> |Logování změn stavu vozidel |P2 |O-08
+|<<FP-27>> |Nahlášení problému z webové aplikace |P2 |O-09
+|<<FP-28>> |Nahlášení problému z mobilní aplikace |P2 |O-09
+|<<FP-29>> |Předání hlášení technické podpoře |P2 |O-09
+|<<FP-30>> |Automatické plánování dodávek |P1 |O-12
+|<<FP-31>> |Automatické přidělení jízd řidičům |P1 |O-12
+|<<FP-32>> |Ruční změna plánu pouze majitelem |P1 |O-01, O-05
+|<<FP-33>> |Více objednávek v jedné jízdě |P1 |O-02, O-03
+|<<FP-34>> |Rozdělení objednávky do více jízd |P1 |O-02, O-03
+|<<FP-35>> |Vymezení rezervace pouze pro vozidlo |P1 |O-02
+|<<FP-36>> |Upozornění a blokování překročené kapacity |P1 |O-03
+|<<FP-37>> |Logické zrušení a zachování historie jízdy |P2 |O-05, O-08
+|<<FP-38>> |Oznámení pokusu o změnu stavu řidiči |P2 |O-06, O-10
+|<<FP-39>> |Potvrzení změny stavu řidičem |P2 |O-05, O-06
+|<<NFP-01>> |Webový přístup k základní části systému |P1 |O-10
+|<<NFP-02>> |Vymezení mobilní aplikace |P2 |O-07, O-10
+|<<NFP-03>> |Omezení přístupu podle rolí a oprávnění |P1 |O-01
+|<<NFP-04>> |Odolnost proti dočasnému výpadku připojení |P2 |O-06
+|<<NFP-05>> |Dvouleté uchování evidovaných dat |P1 |O-08
+|<<NFP-06>> |Předpokládaná provozní kapacita |P1 |O-10
+|<<NFP-07>> |Podpora iOS a Android na osobních telefonech |P2 |O-10
+|===
+
+== Funkční požadavky
+
+[[FP-01]]
+=== FP-01 — Evidence firemních vozidel
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí umožnit oprávněnému uživateli evidovat firemní vozidla obou druhů: osobní automobil a malá dodávka.
+
+*Akceptační kritérium AK-FP-01:* Uživatel zaeviduje jedno vozidlo každého druhu a následně obě vozidla zobrazí v evidenci s rozlišením jejich druhu.
+
+*Zdroj:* <<Z01>>, <<Z09>> (bod 3).
+
+[[FP-02]]
+=== FP-02 — Evidence přepravních parametrů
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí umožnit u vozidla evidovat objem nákladového prostoru, nosnost a rozměry ložné plochy pro posouzení přepravní kapacity.
+
+*Akceptační kritérium AK-FP-02:* Uživatel uloží uvedené parametry vozidla a zobrazí stejné hodnoty při jeho posuzování pro dodávku objednávky.
+Jednotky a pravidla pro chybějící hodnoty budou určeny v rámci O-03.
+
+*Zdroj:* <<Z01>>, <<Z09>> (bod 4).
+
+[[FP-03]]
+=== FP-03 — Získání objednávek z interního systému
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí prostřednictvím API interního systému získávat seznam zákaznických objednávek a údaje potřebné k plánování jejich doručení, včetně adres zákazníků, bez opakovaného ručního zadávání.
+
+*Akceptační kritérium AK-FP-03:* Pro objednávku evidovanou v interním systému systém přes API získá její záznam v seznamu objednávek a zpřístupní doručovací údaje při plánování bez jejich opakovaného ručního zadání.
+Konkrétní struktura seznamu a případné samostatné načítání detailu objednávky zůstávají v O-04. Technická mezipaměť není tímto požadavkem zakázána.
+
+*Zdroj:* <<Z01>>, <<Z06>>, <<Z09>> (body 5 a 6), <<U03>>.
+
+[[FP-04]]
+=== FP-04 — Naplánování dodávky objednávky
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí umožnit vytvořit plán dodávky zákaznické objednávky se stanoveným termínem použití vozidla.
+
+*Akceptační kritérium AK-FP-04:* Pro objednávku získanou podle <<FP-03>> systém vytvoří plánovanou dodávku a zobrazí její vazbu na objednávku a termín použití vozidla.
+Automatické vytvoření plánu řeší <<FP-30>>, jeho ruční úpravy <<FP-32>> a časové vymezení rezervace <<FP-35>>. Počet objednávek a rozdělení objednávky řeší <<FP-33>> a <<FP-34>>.
+
+*Zdroj:* <<Z01>>, <<Z09>> (body 1 a 7), <<U01>>, <<U02>>, <<U08>>.
+
+[[FP-05]]
+=== FP-05 — Přiřazení vozidla k dodávce
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí k plánované dodávce objednávky umožnit přiřazení evidovaného vozidla v rámci automatického plánování nebo oprávněné úpravy plánu majitelem.
+
+*Akceptační kritérium AK-FP-05:* Po úspěšném přiřazení je u plánované dodávky dohledatelné konkrétní vozidlo. Uložení musí respektovat zákaz konfliktních rezervací podle <<FP-07>> a blokování překročené kapacity podle <<FP-36>>.
+
+*Zdroj:* <<Z01>>, <<Z09>> (bod 7), <<U01>>, <<U08>>, <<U09>>.
+
+[[FP-06]]
+=== FP-06 — Kontrola časové dostupnosti vozidla
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí pro požadovaný termín vyhodnotit, zda je vozidlo již rezervováno pro jinou dodávku.
+
+*Akceptační kritérium AK-FP-06:* U vozidla s existující rezervací systém rozliší kolidující termín a termín bez kolize a výsledek zpřístupní při plánování.
+Pravidla pro navazující intervaly a zrušené rezervace řeší O-02 a O-05.
+
+*Zdroj:* <<Z03>>, <<Z09>> (bod 8).
+
+[[FP-07]]
+=== FP-07 — Zabránění konfliktním rezervacím
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí zabránit uložení rezervací, které by znamenaly konfliktní použití stejného vozidla ve stejném čase.
+
+*Akceptační kritérium AK-FP-07:* Při pokusu uložit druhou kolidující rezervaci systém nezanechá obě rezervace jako platné.
+Totéž musí platit při souběžném uložení kolidujících rezervací dvěma uživateli.
+Kontrola souběhu je ověřením zákazu konfliktů, nikoliv požadavkem na konkrétní databázovou technologii.
+
+*Zdroj:* <<Z01>>, <<Z09>> (bod 9).
+
+[[FP-08]]
+=== FP-08 — Vyhodnocení přepravní kapacity
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí při plánování vyhodnotit, zda přepravní nároky nákladu konkrétní jízdy nepřekračují kapacitu přiřazeného vozidla, a zpřístupnit relevantní údaje o rozměrech, hmotnosti a přetížení.
+
+*Akceptační kritérium AK-FP-08:* U zkušební jízdy s celkovou hmotností nákladu 1 000 kg a vozidlem s nosností 800 kg systém vyhodnotí překročení nosnosti a zobrazí odpovídající údaje.
+Posouzení se týká nákladu skutečně zařazeného do dané jízdy, tedy i souhrnu více objednávek nebo přepravované části rozdělené objednávky. Způsob vyhodnocení rozměrů, objemu, jednotek a neúplných údajů zůstává v O-03 a O-04. Detailní rozmístění nákladu tím není zavedeno.
+
+*Zdroj:* <<Z01>>, <<Z09>> (bod 10), <<U02>>, <<U03>>, <<U09>>.
+
+[[FP-09]]
+=== FP-09 — Přehled plánovaných dodávek pro majitele
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí majiteli ve webové aplikaci zobrazovat přehled plánovaných dodávek objednávek.
+
+*Akceptační kritérium AK-FP-09:* Majitel v přehledu nalezne uloženou plánovanou dodávku a zjistí její termín a přiřazené vozidlo.
+
+*Zdroj:* <<Z03>>.
+
+[[FP-10]]
+=== FP-10 — Přehled využití vozidel pro majitele
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí majiteli pro požadovaný termín zobrazovat, která vozidla jsou časově dostupná a která jsou již přiřazena k jiným dodávkám.
+
+*Akceptační kritérium AK-FP-10:* Při existenci jednoho obsazeného a jednoho volného vozidla majitel v přehledu rozliší jejich dostupnost ve zvoleném termínu.
+Vhodnost z hlediska kapacity se posuzuje podle <<FP-08>>.
+
+*Zdroj:* <<Z03>>.
+
+[[FP-11]]
+=== FP-11 — Zobrazení přidělených jízd
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči zobrazovat jízdy, které mu byly přiděleny.
+
+*Akceptační kritérium AK-FP-11:* Řidič v mobilní aplikaci zobrazí zkušební jízdu, kterou mu systém přiřadil podle <<FP-31>>.
+
+*Zdroj:* <<Z04>>, <<Z09>> (bod 12), <<U01>>.
+
+[[FP-12]]
+=== FP-12 — Zobrazení informací potřebných k jízdě
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči u přidělené jízdy zpřístupnit základní údaje potřebné k uskutečnění dodávky, včetně doručovací adresy zákazníka.
+
+*Akceptační kritérium AK-FP-12:* Řidič otevře přidělenou jízdu a zobrazí doručovací adresu odpovídající objednávce z interního systému. Pokud jízda obsahuje více objednávek, lze dohledat příslušné doručovací údaje pro každou z nich.
+Úplný seznam zobrazovaných údajů zůstává v O-04.
+
+*Zdroj:* <<Z04>>, <<Z06>>, <<U02>>.
+
+[[FP-13]]
+=== FP-13 — Zaznamenání zahájení jízdy
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit zaznamenat zahájení přidělené jízdy.
+
+*Akceptační kritérium AK-FP-13:* U přidělené jízdy ve stavu dovolujícím tento úkon řidič zaznamená zahájení a aplikace jej následně zobrazí.
+
+*Zdroj:* <<Z04>>, <<Z09>> (bod 13).
+
+[[FP-14]]
+=== FP-14 — Zaznamenání příjezdu
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit zaznamenat příjezd v rámci přidělené jízdy.
+
+*Akceptační kritérium AK-FP-14:* U přidělené jízdy ve stavu dovolujícím tento úkon řidič zaznamená příjezd a aplikace jej následně zobrazí.
+Význam příjezdu a případné rozlišení příjezdu k zákazníkovi a návratu řeší O-05.
+
+*Zdroj:* <<Z04>>, <<Z09>> (bod 13).
+
+[[FP-15]]
+=== FP-15 — Zaznamenání předání objednávky
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit zaznamenat předání objednávky nebo její přepravované části v rámci přidělené jízdy.
+
+*Akceptační kritérium AK-FP-15:* Řidič zaznamená předání objednávky nebo přepravované části a aplikace záznam zobrazí u příslušné jízdy.
+Přesné vymezení a evidence částí objednávky se musí doplnit v O-02. Podpis zákazníka ani fotografický důkaz nejsou požadovány.
+
+*Zdroj:* <<Z04>>, <<Z09>> (bod 13), <<U02>>.
+
+[[FP-16]]
+=== FP-16 — Zaznamenání dokončení jízdy
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit označit přidělenou jízdu jako dokončenou.
+
+*Akceptační kritérium AK-FP-16:* Řidič provede dokončení jízdy a aplikace ji následně zobrazí jako dokončenou.
+
+*Zdroj:* <<Z02>>, <<Z04>>, <<Z09>> (bod 13).
+
+[[FP-17]]
+=== FP-17 — Zaznamenání zrušení jízdy
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit zaznamenat zrušení přidělené jízdy.
+
+*Akceptační kritérium AK-FP-17:* U jízdy ve stavu dovolujícím zrušení řidič provede zrušení a aplikace ji zobrazí jako zrušenou. Záznam zůstane zachován podle <<FP-37>>. Pokus o změnu stavu jízdy ve stavu „na cestě“ jiným účastníkem podléhá <<FP-38>> a <<FP-39>>.
+Povolené přechody a dopad zrušení na rezervaci vozidla zůstávají v O-05.
+
+*Zdroj:* <<Z04>>, <<Z09>> (bod 13), <<U04>>, <<U05>>, <<U10>>.
+
+[[FP-18]]
+=== FP-18 — Hlášení nehody
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit nahlásit nehodu související s přidělenou jízdou.
+
+*Akceptační kritérium AK-FP-18:* Řidič zaznamená zkušební hlášení nehody a následně ověří jeho evidenci u příslušné jízdy.
+Povinný obsah hlášení musí být upřesněn v O-05.
+
+*Zdroj:* <<Z04>>.
+
+[[FP-19]]
+=== FP-19 — Záznam poškození vozidla
+
+*Priorita:* P2.
+
+*Požadavek:* Systém musí řidiči prostřednictvím mobilní aplikace umožnit zaznamenat poškození vozidla, včetně nového poškození zjištěného po příjezdu.
+
+*Akceptační kritérium AK-FP-19:* Řidič zaznamená poškození a záznam je následně dohledatelný u příslušného vozidla.
+Povinný obsah záznamu a případný další přístup z webové aplikace musí být upřesněny v O-01 a O-05.
+
+*Zdroj:* <<Z04>>, <<Z08>>, <<Z09>> (bod 19).
+
+[[FP-20]]
+=== FP-20 — Zaznamenání úkonů bez připojení
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči při dočasné ztrátě internetového připojení umožnit provést úkony podle <<FP-13>> až <<FP-19>> u dříve zpřístupněných přidělených jízd a souvisejících vozidel.
+
+*Akceptační kritérium AK-FP-20:* Po načtení přidělených jízd a odpojení zařízení řidič na vhodně připravených zkušebních jízdách zaznamená každou z uvedených událostí.
+Provedení nevyžaduje dostupnost serveru. Nové, dosud nenačtené jízdy nejsou tímto kritériem pokryty.
+Hlášení technické podpoře podle <<FP-28>> není bez dalšího potvrzení zahrnuto do offline rozsahu.
+
+*Zdroj:* <<Z02>>, <<Z04>>, <<Z09>> (bod 14).
+
+[[FP-21]]
+=== FP-21 — Automatická synchronizace offline změn
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí po obnovení internetového připojení automaticky zahájit synchronizaci změn zaznamenaných podle FP-20 se systémem bez nutnosti ručního spuštění řidičem.
+
+*Akceptační kritérium AK-FP-21:* Řidič zaznamená změnu bez připojení. Po obnovení připojení aplikace bez ručního spuštění zahájí přenos a změna se objeví v centrálních údajích příslušné jízdy nebo vozidla.
+Je-li jízda v systému již platně zrušena, samotný přenos starší offline změny ji nesmí automaticky obnovit. Změny stavu ve stavu „na cestě“ musí respektovat potvrzení řidičem podle <<FP-39>>.
+Časový limit synchronizace, ostatní konflikty a opakované přenosy zůstávají v O-06.
+
+*Zdroj:* <<Z02>>, <<Z04>>, <<Z09>> (bod 15), <<U05>>, <<U10>>.
+
+[[FP-22]]
+=== FP-22 — Přístup dělníka k údajům o dodávkách
+
+*Priorita:* P2.
+
+*Požadavek:* Webová aplikace musí dělníkovi zpřístupnit informace o připravovaných a plánovaných dodávkách v rozsahu jeho oprávnění.
+
+*Akceptační kritérium AK-FP-22:* Po potvrzení matice oprávnění dělník zobrazí údaje o dodávce, k nimž má přístup, a nezíská údaje, k nimž přístup nemá.
+Přesný rozsah práce s údaji je podmíněn vyřešením O-01.
+
+*Zdroj:* <<Z05>>.
+
+[[FP-23]]
+=== FP-23 — Vlastní uživatelské nastavení
+
+*Priorita:* P3.
+
+*Požadavek:* Systém musí každému uživateli umožnit uchovávat a používat vlastní uživatelské nastavení.
+
+*Akceptační kritérium AK-FP-23:* Dva uživatelé uloží rozdílné hodnoty stejné podporované předvolby a systém každému následně použije jeho vlastní hodnotu.
+Preferované vozidlo a výchozí pohled jsou příklady ze zadání; konečný seznam předvoleb a jejich dostupnost v obou aplikacích řeší O-07.
+
+*Zdroj:* <<Z05>>, <<Z09>> (bod 17).
+
+[[FP-24]]
+=== FP-24 — Evidence termínu platnosti STK
+
+*Priorita:* P2.
+
+*Požadavek:* Systém musí umožnit u jednotlivých vozidel evidovat a zobrazovat termín platnosti STK.
+
+*Akceptační kritérium AK-FP-24:* Uživatel uloží termín platnosti STK u zkušebního vozidla a následně jej zobrazí u stejného vozidla.
+Automatické upozornění ani zákaz plánování po skončení platnosti STK nejsou v zadání stanoveny.
+
+*Zdroj:* <<Z08>>, <<Z09>> (bod 18).
+
+[[FP-25]]
+=== FP-25 — Historie poškození vozidla
+
+*Priorita:* P2.
+
+*Požadavek:* Systém musí uchovávat historii záznamů o poškození vozidla tak, aby přidání nového záznamu nezpůsobilo ztrátu dřívějších záznamů.
+
+*Akceptační kritérium AK-FP-25:* Po postupném zaznamenání dvou různých poškození stejného vozidla zůstanou dohledatelné oba záznamy. Jejich uchování podléhá <<NFP-05>>; počátek lhůty u záznamů bez jednoznačné vazby na objednávku řeší O-08.
+
+*Zdroj:* <<Z08>>, <<Z09>> (bod 20), <<U06>>.
+
+[[FP-26]]
+=== FP-26 — Logování změn stavu vozidel
+
+*Priorita:* P2.
+
+*Požadavek:* Systém musí uchovávat logy související se stavem vozidel a provedenými změnami těchto údajů.
+
+*Akceptační kritérium AK-FP-26:* Po zaznamenání a následné změně údaje o stavu zkušebního vozidla lze dohledat odpovídající logy obou operací. Logy související se zrušenou jízdou zůstávají zachovány podle <<FP-37>>.
+Uchování podléhá <<NFP-05>>. Úplný obsah logu a způsob zpřístupnění zůstávají v O-08. Požadavek nezavádí plošný audit všech činností systému.
+
+*Zdroj:* <<Z08>>, <<Z09>> (bod 20), <<U04>>, <<U06>>.
+
+[[FP-27]]
+=== FP-27 — Nahlášení problému z webové aplikace
+
+*Priorita:* P2.
+
+*Požadavek:* Webová aplikace musí internímu uživateli umožnit nahlásit chybu, požadavek nebo jiný problém související s používáním systému.
+
+*Akceptační kritérium AK-FP-27:* Interní uživatel prostřednictvím webové aplikace vytvoří hlášení problému, které systém přijme k předání podle <<FP-29>>.
+
+*Zdroj:* <<Z07>>, <<Z09>> (bod 22).
+
+[[FP-28]]
+=== FP-28 — Nahlášení problému z mobilní aplikace
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči umožnit nahlásit chybu, požadavek nebo jiný problém související s používáním systému.
+
+*Akceptační kritérium AK-FP-28:* Řidič prostřednictvím mobilní aplikace vytvoří hlášení problému, které systém přijme k předání podle <<FP-29>>.
+
+*Zdroj:* <<Z07>>.
+
+[[FP-29]]
+=== FP-29 — Předání hlášení technické podpoře
+
+*Priorita:* P2.
+
+*Požadavek:* Systém musí hlášení vytvořená podle <<FP-27>> a <<FP-28>> předávat pracovníkům společnosti zajišťující dodávku a technickou podporu systému.
+
+*Akceptační kritérium AK-FP-29:* Zkušební hlášení z každé aplikace obdrží určený pracovník podpory dohodnutým kanálem.
+Kanál předání, povinný obsah hlášení a postup při selhání předání řeší O-09.
+
+*Zdroj:* <<Z07>>.
+
+[[FP-30]]
+=== FP-30 — Automatické plánování dodávek
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí automaticky vytvářet plán dodávek na základě objednávek získaných z interního systému a dostupných vozidel při respektování časových a kapacitních omezení.
+
+*Akceptační kritérium AK-FP-30:* Pro připravenou sadu objednávek, vozidel a plánovacích vstupů, pro kterou existuje přípustný plán, systém bez ručního sestavování jednotlivých přiřazení vytvoří plán dodávek. Výsledek neporušuje <<FP-07>> ani <<FP-36>> a je dostupný majiteli v přehledu.
+Spouštění plánování, povinné vstupy, výběr mezi více přípustnými plány a postup při nenalezení plánu se musí doplnit v O-12. Požadavek nezavádí optimalizaci tras.
+
+*Zdroj:* <<U01>>, ve vazbě na <<Z01>> a <<U09>>.
+
+[[FP-31]]
+=== FP-31 — Automatické přidělení jízd řidičům
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí automaticky přidělovat naplánované jízdy řidičům.
+
+*Akceptační kritérium AK-FP-31:* Po automatickém přidělení zkušební jízdy je u ní evidován konkrétní řidič a tento řidič ji zobrazí podle <<FP-11>>.
+Pravidla výběru řidiče a zdroj seznamu řidičů zůstávají v O-12. Přidělení nevytváří časovou rezervaci řidiče ani personální evidenci směn, dovolených nebo řidičských oprávnění.
+
+*Zdroj:* <<U01>>, <<U02>>; omezení personální evidence podle <<Z09>> (bod 25).
+
+[[FP-32]]
+=== FP-32 — Ruční změna plánu pouze majitelem
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí povolit ruční změny plánu dodávek pouze majiteli.
+
+*Akceptační kritérium AK-FP-32:* Majitel provede přípustnou změnu plánu a systém ji uloží. Stejný pokus řidiče nebo dělníka je odmítnut. Změna nadále podléhá <<FP-07>> a <<FP-36>>.
+Toto omezení se týká ručních změn plánu; nebrání automatickému plánování podle <<FP-30>> ani záznamům průběhu jízdy řidičem. Změna stavu jízdy „na cestě“ musí respektovat <<FP-39>>.
+
+*Zdroj:* <<U08>>, <<U09>>, <<U10>>.
+
+[[FP-33]]
+=== FP-33 — Více objednávek v jedné jízdě
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí umožnit zahrnout do jedné jízdy více zákaznických objednávek.
+
+*Akceptační kritérium AK-FP-33:* Zkušební jízda obsahuje dvě různé objednávky a u obou je dohledatelná vazba na tuto jízdu. Kapacita se posuzuje pro jejich náklad zařazený do jízdy podle <<FP-08>>.
+Pořadí zastávek a vymezení rezervace při více vykládkách zůstávají v O-02.
+
+*Zdroj:* <<U02>>.
+
+[[FP-34]]
+=== FP-34 — Rozdělení objednávky do více jízd
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí umožnit rozdělit doručení jedné objednávky do více jízd při zachování vazby každé přepravované části na původní objednávku.
+
+*Akceptační kritérium AK-FP-34:* Jedna zkušební objednávka je rozdělena do dvou jízd a u obou lze určit původní objednávku a příslušnou přepravovanou část. Nezakládá se druhá samostatná zákaznická objednávka jako náhrada původní.
+Přesný způsob vymezení částí a evidence jejich předání se musí doplnit v O-02.
+
+*Zdroj:* <<U02>>, při zachování zásady neduplicitní evidence podle <<Z06>>.
+
+[[FP-35]]
+=== FP-35 — Vymezení rezervace pouze pro vozidlo
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí vymezit časový interval rezervace vozidla od naložení nábytku do jeho vyložení. Rezervace se vztahuje pouze na vozidlo, nikoliv na řidiče.
+
+*Akceptační kritérium AK-FP-35:* Při vstupních časech naložení 10:00 a vyložení 12:00 systém eviduje rezervaci daného vozidla pro tento interval a použije ji při kontrole konfliktů. Samostatná časová rezervace řidiče nevznikne.
+Rozlišení plánovaných a skutečných časů, navazující intervaly, více nakládek či vykládek a dostupnost vozidla pro další přesun zůstávají v O-02. Zahrnutí celé zpáteční cesty do rezervace není z odpovědi odvozeno.
+
+*Zdroj:* <<U02>>.
+
+[[FP-36]]
+=== FP-36 — Upozornění a blokování překročené kapacity
+
+*Priorita:* P1.
+
+*Požadavek:* Při zjištěném překročení přepravní kapacity musí systém zobrazit upozornění a zabránit uložení plánu s tímto překročením.
+
+*Akceptační kritérium AK-FP-36:* Pro náklad o hmotnosti 1 000 kg a vozidlo s nosností 800 kg systém zobrazí upozornění na překročení a plán neuloží. Po přiřazení vozidla s dostatečnou kapacitou a splnění ostatních podmínek kapacitní překážka odpadne.
+Pravidlo platí pro automatické plánování i ruční změnu majitelem. Konkrétní testy dalších rozměrových a objemových omezení závisejí na O-03.
+
+*Zdroj:* <<U03>>, jednoznačně doplněno výběrem <<U09>>.
+
+[[FP-37]]
+=== FP-37 — Logické zrušení a zachování historie jízdy
+
+*Priorita:* P2.
+
+*Požadavek:* Při zrušení jízdy musí systém ponechat záznam jízdy se stavem zrušení a zachovat její související logy místo fyzického odstranění záznamu při tomto úkonu.
+
+*Akceptační kritérium AK-FP-37:* Po platném zrušení zkušební jízdy zůstane dohledatelný její záznam ve stavu zrušení a související logy. Samotná synchronizace starší offline změny tuto jízdu automaticky neobnoví.
+Uchování podléhá <<NFP-05>>. U jízdy „na cestě“ musí změna stavu respektovat <<FP-39>>; dopad zrušení na rezervaci zůstává v O-05.
+
+*Zdroj:* <<U04>>, <<U05>>, <<U06>>, <<U10>>.
+
+[[FP-38]]
+=== FP-38 — Oznámení pokusu o změnu stavu řidiči
+
+*Priorita:* P2.
+
+*Požadavek:* Při pokusu jiného účastníka o změnu stavu jízdy, jejíž řidič je na cestě, musí systém zaslat příslušnému řidiči oznámení o navržené změně stavu.
+
+*Akceptační kritérium AK-FP-38:* U zkušební jízdy ve stavu „na cestě“ vyvolá jiný oprávněný účastník pokus o změnu stavu. Příslušný řidič obdrží oznámení, ze kterého rozpozná dotčenou jízdu a navržený stav.
+Kanál oznámení, doručení při offline režimu a časové limity zůstávají v O-06 a O-10.
+
+*Zdroj:* <<U05>>, upřesněno v <<U10>>.
+
+[[FP-39]]
+=== FP-39 — Potvrzení změny stavu řidičem
+
+*Priorita:* P2.
+
+*Požadavek:* Změnu stavu jízdy navrženou jiným účastníkem v době, kdy je řidič na cestě, smí systém uplatnit až po výslovném potvrzení příslušným řidičem.
+
+*Akceptační kritérium AK-FP-39:* Po navržení změny podle <<FP-38>> zůstane aktuální stav jízdy beze změny. Pokud příslušný řidič navrženou změnu výslovně potvrdí a přechod je přípustný, systém nový stav uloží. Bez potvrzení jej neuloží.
+Záznam vlastních událostí řidičem podle <<FP-13>> až <<FP-19>> zůstává umožněn. Odmítnutí žádosti, neodpovězení, více souběžných žádostí a přípustné přechody zůstávají v O-05 a O-06.
+
+*Zdroj:* <<U05>>, upřesněno v <<U10>>.
+
+== Nefunkční požadavky
+
+[[NFP-01]]
+=== NFP-01 — Webový přístup k základní části systému
+
+*Priorita:* P1.
+
+*Požadavek:* Základní část systému pro plánování dodávek a přehled využití vozidel musí být dostupná jako webová aplikace.
+
+*Akceptační kritérium AK-NFP-01:* Oprávněný uživatel provede plánování a zobrazí přehled vozidel ve webovém prohlížeči prostřednictvím webové aplikace.
+Konkrétní podporované prohlížeče a jejich verze zatím nejsou určeny; viz O-10.
+
+*Zdroj:* <<Z02>>, <<Z09>> (bod 2).
+
+[[NFP-02]]
+=== NFP-02 — Vymezení mobilní aplikace
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí být určena výhradně pro řidiče a musí být omezena na jejich práci s přidělenými jízdami, související hlášení a případná vlastní nastavení; nesmí poskytovat kompletní správu systému.
+
+*Akceptační kritérium AK-NFP-02:* Řidič provede scénáře přidělených jízd, jejich průběhu, souvisejících hlášení a potvrzování změn. Mobilní aplikace neposkytuje kompletní správu systému ani ruční úpravy plánu vyhrazené majiteli podle <<FP-32>>.
+Platformy stanovuje <<NFP-07>>; dostupnost vlastních předvoleb zůstává v O-07.
+
+*Zdroj:* <<Z02>>, <<Z04>>, <<Z05>>, <<Z07>>, <<Z09>> (bod 11), <<U07>>, <<U08>>, <<U10>>.
+
+[[NFP-03]]
+=== NFP-03 — Omezení přístupu podle rolí a oprávnění
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí omezit uživatelský přístup na zaměstnance firmy a zpřístupňovat údaje a operace podle jejich rolí a oprávnění; zákazníci nesmějí mít uživatelský přístup do systému.
+
+*Akceptační kritérium AK-NFP-03:* Systém povolí majiteli ruční úpravu plánu podle <<FP-32>>, zatímco řidiči a dělníkovi stejnou operaci odmítne. Řidiči zůstávají dostupné jeho vlastní události jízdy a potvrzení podle <<FP-39>>. Zákaznický přístup bude odmítnut.
+Omezení musí platit i při přímém vyvolání operace mimo běžnou navigaci. Ostatní oprávnění a způsob ověření identity se doplní v O-01.
+
+*Zdroj:* <<Z05>>, <<Z07>>, <<Z09>> (bod 21), <<U08>>, <<U10>>.
+
+[[NFP-04]]
+=== NFP-04 — Odolnost proti dočasnému výpadku připojení
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace nesmí ztratit změny zaznamenané podle <<FP-20>> v důsledku dočasné ztráty internetového připojení před jejich následnou synchronizací.
+
+*Akceptační kritérium AK-NFP-04:* Řidič zaznamená offline změnu; během výpadku a po obnovení připojení změna zůstane zachována a lze ověřit její přenos podle <<FP-21>>.
+Odolnost vůči odinstalaci aplikace, ztrátě zařízení nebo jiným poruchám není ze zadání odvozena.
+Způsob zachování změn při ukončení aplikace a konflikty synchronizace řeší O-06.
+
+*Zdroj:* <<Z02>>, <<Z04>>; kvalitativní důsledek požadavku na offline práci a následnou synchronizaci.
+
+[[NFP-05]]
+=== NFP-05 — Dvouleté uchování evidovaných dat
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí uplatňovat minimální dvouletou dobu uchování všech dat, která sám eviduje, včetně údajů o jízdách, finančních nákladech, poškozeních a souvisejících logů. U objednávky a dat navázaných na objednávku se lhůta počítá od jejího založení.
+
+*Akceptační kritérium AK-NFP-05:* U objednávky založené 15. 10. 2026 se při simulovaném posunu času ověří, že objednávka a její navázaná data nejsou retenčním mechanismem odstraněna před 15. 10. 2028. Kontrola zahrne také související finanční údaje a zrušenou jízdu s logy.
+Počátek lhůty pro data bez vazby na objednávku, vazby na více objednávek a pozdě vzniklé záznamy se musí doplnit v O-08. Dvouletá lhůta sama nenařizuje smazání po jejím uplynutí ani nezavádí fakturaci či výpočet nákladů.
+
+*Zdroj:* <<Z09>> (bod 23), <<U04>>, <<U06>>; rozsah uchování rozšířen podle doplnění oproti původnímu zadání.
+
+[[NFP-06]]
+=== NFP-06 — Předpokládaná provozní kapacita
+
+*Priorita:* P1.
+
+*Požadavek:* Systém musí být dimenzován přibližně pro 25 uživatelů a zpracování přibližně 50 zakázek s doručením denně.
+
+*Akceptační kritérium AK-NFP-06:* V dohodnutém zkušebním prostředí se sadou 25 uživatelských účtů proběhne zpracování 50 zakázek během modelového provozního dne bez ztráty uložených dat a bez porušení <<FP-07>>.
+Jde o základní provozní scénář; úplné výkonnostní přijetí vyžaduje doplnění souběžnosti, profilu operací a mezí odezvy podle O-10.
+Zadání neříká, že všech 25 uživatelů pracuje současně.
+
+*Zdroj:* <<Z02>>, <<Z09>> (bod 24).
+
+[[NFP-07]]
+=== NFP-07 — Podpora iOS a Android na osobních telefonech
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace pro řidiče musí podporovat provoz na jejich osobních telefonech s operačními systémy iOS a Android.
+
+*Akceptační kritérium AK-NFP-07:* Na dohodnutém podporovaném zařízení s iOS i na zařízení s Androidem řidič zobrazí přidělené jízdy, zaznamená základní událost offline, po obnovení připojení ověří automatickou synchronizaci a přijme oznámení změny stavu s možností potvrzení.
+Konkrétní podporované verze systémů a zařízení se musí doplnit v O-10. Nativní technologie vývoje tím není určena.
+
+*Zdroj:* <<U07>>, ve vazbě na <<U05>> a <<U10>>.
+
+== Stav otázek a zbývající upřesnění
+
+Označení O-01 až O-11 zůstávají zachována pro návaznost konzultací. O-12 nově zachycuje podrobnosti doplněné automatizace.
+Stav „Částečně upřesněno“ znamená, že uvedené rozhodnutí již bylo zapracováno, ale další část původní otázky zůstává neuzavřena.
+
+[cols="1,2,4,5",options="header"]
+|===
+|ID |Stav |Zapracováno |Zbývá určit
+|O-01 |Částečně upřesněno |Automatické plánování a přidělování; ruční změna plánu pouze majitelem. |Konkrétní oprávnění dělníka, správa vozidel a STK a úplná matice dalších operací. Viz FP-22, FP-24, NFP-03.
+|O-02 |Částečně upřesněno |Více objednávek v jízdě, rozdělení objednávky, interval od naložení do vyložení a rezervace pouze vozidla. |Plánované versus skutečné časy, mezní časy intervalů, více nakládek/vykládek a přesuny mezi jízdami. Jak se určují přepravované části objednávky. Viz FP-33 až FP-35.
+|O-03 |Částečně upřesněno |Posouzení rozměrů a hmotnosti, upozornění a blokování překročené kapacity. |Jednotky, výpočet souhrnného nákladu, rozměrová a objemová pravidla a postup při neúplných údajích. Detailní rozmístění nadále není závazné. Viz FP-02, FP-08, FP-36.
+|O-04 |Částečně upřesněno |API vrací seznam objednávek. |Konkrétní pole a kontrakt API, odkud se získají jednotlivé přepravní parametry, aktuálnost dat, výpadky a úplný rozsah údajů pro řidiče. Viz FP-03, FP-08, FP-12.
+|O-05 |Částečně upřesněno |Zrušení je logické, historie a logy se zachovají; změna stavu při jízdě vyžaduje potvrzení řidiče. |Úplné přechody stavů, význam příjezdu, dopad zrušení na rezervaci, obsah hlášení; odmítnutí nebo nevyřízení navržené změny stavu. Viz FP-13 až FP-19, FP-37, FP-39.
+|O-06 |Částečně upřesněno |Automatická synchronizace; zrušený stav se neobnoví jen přenosem staré změny; řidič dostane oznámení a potvrzuje změnu stavu. |Ostatní konflikty, více žádostí, opakované přenosy, doba synchronizace, uchování po ukončení aplikace a doručení/potvrzení žádostí bez připojení. Viz FP-20, FP-21, FP-38, FP-39, NFP-04.
+|O-07 |Otevřeno |Možnost vlastního uživatelského nastavení je v původním zadání. |Konkrétní předvolby a jejich dostupnost na webu a v mobilní aplikaci. Viz FP-23.
+|O-08 |Částečně upřesněno |Finanční význam nákladů, uchování všech evidovaných dat alespoň dva roky a počátek lhůty od založení objednávky. |Počátek lhůty u vozidel a jiných dat bez vazby na objednávku, sdílených záznamů více objednávek a záznamů vzniklých až po této lhůtě; obsah logů. Viz FP-25, FP-26, NFP-05.
+|O-09 |Otevřeno |Hlášení z webu a mobilní aplikace podpoře dodavatele je v zadání. |Kanál předání, povinný obsah, selhání předání a případný offline režim hlášení podpoře. Viz FP-27 až FP-29.
+|O-10 |Částečně upřesněno |Web a osobní telefony řidičů s iOS a Androidem. |Verze prohlížečů a mobilních systémů, zařízení, kanál oznámení, souběžnost uživatelů, profil zátěže a odezvy. Viz FP-38, NFP-01, NFP-06, NFP-07.
+|O-11 |Otevřeno |Původním jádrem první etapy je plánování dodávek. |Přesný obsah první etapy včetně automatizace a zařazení zbývajících funkcí do etap. Odpověď na platformy toto nerozhodla.
+|O-12 |Otevřeno |Automatické plánování dodávek a automatické přidělování řidičů. |Spouštění, vstupy a pravidla výběru; cíle plánování, postup při nenalezení přípustného plánu a zdroj seznamu řidičů. Nepřidávat nepodloženou optimalizaci tras ani rezervace řidičů. Viz FP-30, FP-31.
+|===
+
+== Kontrola souladu a pokrytí
+
+Kontrola byla provedena dne 15. 10. 2026 vůči původnímu zadání a doplněním U01 až U10.
+Všechny požadavky mají identifikátor, zdroj, navrženou prioritu a vlastní akceptační kritérium.
+Pro otevřené podrobnosti není deklarována konečná přejímací připravenost. Splnění implementací nebylo ověřeno.
+
+=== Pokrytí 25 bodů původního souhrnného zadání
+
+[cols="1,3,4",options="header"]
+|===
+|Bod |Obsah |Pokrytí
+|1 |Plánování v první etapě |FP-04, FP-05; scope a O-11
+|2 |Webová aplikace |NFP-01
+|3 |Osobní auta a malé dodávky |FP-01
+|4 |Přepravní parametry vozidel |FP-02
+|5 |Objednávky a adresy přes API |FP-03
+|6 |Bez opakovaného ručního zadávání |FP-03
+|7 |Použití vozidel pro dodávky |FP-04, FP-05, FP-35
+|8 |Kontrola dostupnosti vozidla |FP-06
+|9 |Zabránění konfliktním rezervacím |FP-07
+|10 |Posouzení kapacity |FP-08; rozšířeno FP-36 podle U09
+|11 |Mobilní aplikace pouze pro řidiče |NFP-02; platformy doplněny NFP-07
+|12 |Přidělené jízdy |FP-11, FP-12
+|13 |Průběh jízdy |FP-13 až FP-17
+|14 |Offline úkony |FP-20, NFP-04
+|15 |Synchronizace |FP-21; automatické spuštění podle U05
+|16 |Montáž nábytku mimo rozsah |Scope
+|17 |Vlastní nastavení |FP-23
+|18 |Platnost STK |FP-24
+|19 |Poškození po příjezdu |FP-19
+|20 |Historie a logy vozidel |FP-25, FP-26
+|21 |Interní použití |NFP-03
+|22 |Hlášení problémů z webu |FP-27, FP-29
+|23 |Dvouleté uchování historie jízd a nákladů |NFP-05; rozsah rozšířen U06
+|24 |Asi 25 uživatelů a 50 zakázek denně |NFP-06; souběžnost dosud neurčena
+|25 |Personální evidence mimo rozsah |Scope; rezervace pouze vozidel podle FP-35
+|===
+
+=== Pokrytí doplnění a kontrola konzistence
+
+[cols="2,5",options="header"]
+|===
+|Oblast |Výsledek
+|Automatizace a oprávnění |U01 je pokryto FP-30 a FP-31. U08 je pokryto FP-32 a NFP-03. Automatický plánovač není zaměněn za lidskou roli ani za právo dělníka plán ručně měnit.
+|Více objednávek a rozdělení |U02 je pokryto FP-33 až FP-35; kapacita se posuzuje pro náklad dané jízdy, nikoliv automaticky pro celou původní rozdělenou objednávku.
+|Varování a blokování |Nejednoznačnost U03 byla vyřešena U09. FP-08 vyhodnocuje kapacitu, FP-36 vyžaduje upozornění a blokování. Původní výklad „pouze podklady k posouzení“ byl nahrazen.
+|Historie a zrušení |U04 a U05 jsou pokryty FP-17, FP-21 a FP-37. Zrušení není fyzické smazání a samotná starší offline změna jízdu automaticky neobnoví.
+|Změna stavu na cestě |U10 je rozděleno na oznámení FP-38 a potvrzení FP-39. Pouhý pokus jiného účastníka nemění stav; vlastní události řidiče zůstávají možné.
+|Automatická synchronizace |FP-21 výslovně nevyžaduje ruční spuštění; úplná politika dalších konfliktů nadále zůstává otevřená.
+|Retence |U06 rozšiřuje NFP-05 na všechna evidovaná data. Počátek od založení objednávky je zapsán, ale není bez podkladu přenesen na vozidlo bez vazby na objednávku.
+|Platformy |U07 je pokryto NFP-07. Konkrétní verze systémů, zařízení a prohlížečů nejsou vymyšleny.
+|Další části původního zadání |Přehledy majitele FP-09 a FP-10, nehody FP-18, dělník FP-22 a mobilní podpora FP-28 a FP-29 zůstávají pokryty.
+|Priority a etapy |Priority zůstávají návrhem. Odpověď o platformách není použita jako schválení všech funkcí pro první etapu.
+|===
+
+== Doporučené otázky pro další konzultaci
+
+. *O-01:* Jaké konkrétní operace smí provádět dělník a kdo spravuje vozidla a termíny STK?
+. *O-02:* Používá plán rezervace plánované časy naložení a vyložení? Jak se interval změní podle skutečnosti a jak se rezervuje vozidlo při více vykládkách? Jak se evidují části rozdělené objednávky?
+. *O-03 a O-04:* Která konkrétní pole API poskytuje pro rozměry, hmotnost a objem a co má systém udělat, pokud údaje chybějí?
+. *O-05 a O-06:* Co se stane, pokud řidič navrženou změnu odmítne nebo nepotvrdí? Uvolní platné zrušení automaticky rezervaci vozidla? Jak se doručují žádosti řidiči bez připojení?
+. *O-08:* Od jaké události se počítají dva roky u vozidel a dalších dat bez vazby na objednávku a jak se zachází s pozdě vzniklými záznamy?
+. *O-10 a O-11:* Jaké verze platforem a souběžnost se mají podporovat a které funkce musí být v první etapě?
+. *O-12:* Kdy se spouští automatické plánování, podle čeho vybírá řidiče a jaký má být výsledek, pokud nelze sestavit přípustný plán?
+
+Odpovědi se mají zaznamenat se zdrojem a datem, promítnout do dotčených požadavků a následně do navazujících Use Case a modelů.
