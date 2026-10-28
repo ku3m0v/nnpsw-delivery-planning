@@ -1,0 +1,53 @@
+@startuml
+top to bottom direction
+
+skinparam backgroundColor white
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam packageStyle rectangle
+skinparam linetype polyline
+skinparam nodesep 70
+skinparam ranksep 70
+skinparam ArrowColor #475569
+skinparam usecase {
+  BackgroundColor #F1F5F9
+  BorderColor #475569
+  FontColor #0F172A
+  BackgroundColor<<key>> #DBEAFE
+}
+skinparam ArrowFontSize 12
+hide stereotype
+
+title Use Case model — detail plánování
+
+actor "Existující interní\nvýrobní systém" as ProductionSystem
+
+rectangle "Systém pro správu firemních vozidel a plánování dodávek\n(detail sdíleného chování)" as System {
+  usecase "UC-16\nZískat údaje objednávek" as UC16
+  usecase "UC-01\nNaplánovat dodávky\nobjednávek" as UC01 <<key>>
+  usecase "UC-04\nPosoudit kapacitu\nvozidla" as UC04
+  usecase "UC-03\nOvěřit dostupnost\nvozidla" as UC03
+  usecase "UC-02\nUpravit plán dodávek" as UC02 <<key>>
+  usecase "UC-06\nZobrazit využití vozidel" as UC06 <<key>>
+
+  UC01 .up.> UC16 : <<include>>
+  UC01 .down.> UC04 : <<include>>
+  UC01 .down.> UC03 : <<include>>
+  UC02 .up.> UC04 : <<include>>
+  UC02 .up.> UC03 : <<include>>
+  UC06 .up.> UC03 : <<include>>
+
+  ' Hidden links keep the two checks and the lower goals on aligned rows.
+  UC04 -[hidden]right- UC03
+  UC02 -[hidden]right- UC06
+}
+
+UC16 -right- ProductionSystem : API
+
+legend bottom left
+  Stejná ID označují stejné UC jako v hlavním přehledu.
+  Include vyjadřuje vložené chování; neurčuje pořadí kroků.
+endlegend
+@enduml

@@ -1,0 +1,95 @@
+@startuml
+left to right direction
+
+skinparam backgroundColor white
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam packageStyle rectangle
+skinparam actorStyle stickman
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 110
+skinparam ArrowColor #475569
+skinparam usecase {
+  BackgroundColor #F8FAFC
+  BorderColor #475569
+  FontColor #0F172A
+  BackgroundColor<<key>> #DBEAFE
+  BackgroundColor<<supporting>> #F1F5F9
+}
+hide stereotype
+
+title Use Case model — hlavní přehled
+
+actor "Majitel" as Owner
+actor "Dělník" as Worker
+actor "Řidič" as Driver
+actor "Pověřený uživatel evidence\n(pracovní role, O-01)" as RecordsUser #FFF4CC
+actor "Interní uživatel\n(obecná role)" as Employee
+actor "Existující interní\nvýrobní systém" as ProductionSystem
+actor "Technická podpora\ndodavatele" as Support
+
+rectangle "Systém pro správu firemních vozidel a plánování dodávek\n(webová aplikace + mobilní aplikace řidiče + vlastní služby)" as System {
+  usecase "UC-01\nNaplánovat dodávky\nobjednávek" as UC01 <<key>>
+  usecase "UC-02\nUpravit plán dodávek" as UC02 <<key>>
+  usecase "UC-06\nZobrazit využití vozidel" as UC06 <<key>>
+  usecase "UC-05\nZobrazit plánované\ndodávky" as UC05
+  usecase "UC-07\nZobrazit přidělené jízdy" as UC07 <<key>>
+  usecase "UC-08\nZaznamenat stav jízdy" as UC08 <<key>>
+  usecase "UC-09\nPotvrdit navrženou\nzměnu stavu jízdy" as UC09
+  usecase "UC-10\nNahlásit nehodu" as UC10
+  usecase "UC-11\nZaznamenat poškození\nvozidla" as UC11
+  usecase "UC-12\nEvidovat vozidla\na přepravní parametry" as UC12
+  usecase "UC-13\nEvidovat platnost STK" as UC13
+  usecase "UC-14\nUpravit vlastní\nuživatelské nastavení" as UC14
+  usecase "UC-15\nNahlásit problém podpoře" as UC15
+
+  ' Hidden links align the use cases in a single column.
+  UC01 -[hidden]right-> UC02
+  UC02 -[hidden]right-> UC06
+  UC06 -[hidden]right-> UC05
+  UC05 -[hidden]right-> UC07
+  UC07 -[hidden]right-> UC08
+  UC08 -[hidden]right-> UC09
+  UC09 -[hidden]right-> UC10
+  UC10 -[hidden]right-> UC11
+  UC11 -[hidden]right-> UC12
+  UC12 -[hidden]right-> UC13
+  UC13 -[hidden]right-> UC14
+  UC14 -[hidden]right-> UC15
+}
+
+Owner -- UC01
+Owner -- UC02
+Owner -- UC06
+Owner -- UC05
+Worker -- UC05
+Driver -- UC07
+Driver -- UC08
+Driver -- UC09
+Driver -- UC10
+Driver -- UC11
+RecordsUser -- UC12
+RecordsUser -- UC13
+Employee -- UC14
+Employee -- UC15
+
+UC01 -- ProductionSystem : API (přes UC-16)
+UC15 -- Support : příjem hlášení
+
+' Hidden links keep the actor roles in the same order as their goals.
+Owner -[hidden]right-> Worker
+Worker -[hidden]right-> Driver
+Driver -[hidden]right-> RecordsUser
+RecordsUser -[hidden]right-> Employee
+
+legend bottom left
+  Modrá výplň: 5 klíčových UC pro cvičení 6.
+  Podpůrné UC-03, UC-04 a UC-16: samostatný detail plánování.
+  Dědičnost společných služeb: samostatný diagram aktérů.
+  A-07 je pracovní role k potvrzení v O-01.
+  UC-01 automaticky přiřazuje vozidla i řidiče (O-12).
+endlegend
+@enduml
