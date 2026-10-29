@@ -1,47 +1,42 @@
-= Cvičení 6: Scénáře klíčových UC a activity diagramy
+= Specifikace případů užití systému plánování dodávek
 :lang: cs
 :toc:
 :toc-title: Obsah
 :toclevels: 3
 :sectnums:
-:revnumber: 0.1 - pracovní návrh
-:revdate: 2026-10-29
 
-[NOTE]
-====
-Tento dokument je *pracovní analytický návrh* pro Cvičení 6 navazující na xref:use-case-model.adoc[Use Case model z Cvičení 5]. Nejde o schválené zadání ani implementační specifikaci. Rozhodnutí o nočním automatickém plánování a správě vozidel majitelem pocházejí z týmového upřesnění ze dne 29. 10. 2026. Ostatní konkretizace jsou návrhy k ověření s týmem; nesmějí být automaticky vydávány za potvrzené požadavky zadavatele.
-====
+== Účel a rozsah dokumentu
 
-== Activity diagramy a export
+Dokument popisuje vybrané případy užití informačního systému pro správu firemních vozidel a plánování dodávek zákaznických objednávek. U jednotlivých případů užití stanovuje účel, účastníky, spouštěč, předpodmínky, hlavní a odchylné průběhy a výsledné podmínky. Součástí každé specifikace je odpovídající diagram aktivit.
 
-Zdroje všech čtyř diagramů jsou v `diagrams/activity/`. Níže jsou odkazy na SVG, které se doplní po exportu PlantUML do `out/diagrams/activity/`. Zatím nejsou exporty v repozitáři.
+Identifikátory případů užití a funkčních požadavků odpovídají xref:use-case-model.adoc[modelu případů užití] a xref:katalog-pozadavku-v0.1.adoc[katalogu požadavků]. Detailní provozní pravidla uvedená v této specifikaci tvoří podklad pro další zpřesnění návrhu systému.
 
-== Výběr a návaznost na Cvičení 5
+== Přehled specifikovaných případů užití
 
-[cols="1,3,4,4",options="header"]
+[cols="1,3,5",options="header"]
 |===
-|ID |Název |Účel |Důvod výběru
-|UC-01 |Naplánovat dodávky objednávek |Noční automatická tvorba plánu z dat interního systému |Hlavní hodnota řešení; integrace, časové konflikty, kapacity a přiřazení řidičů
-|UC-02 |Upravit plán dodávek |Oprávněná ruční změna automaticky vytvořeného plánu |Ověření oprávnění majitele a opakované kontroly přípustnosti
-|UC-07 |Zobrazit přidělené jízdy |Předat řidiči přes mobilní aplikaci jeho úkoly a doručovací údaje |Propojení plánování s provozem, soukromí a dostupnost předem načtených dat
-|UC-08 |Zaznamenat stav jízdy |Zaznamenat události jízdy online nebo offline a synchronizovat je |Klíčová mobilní funkce, přechody stavů, konflikty synchronizace
+|ID |Případ užití |Význam
+|UC-01 |Naplánovat dodávky objednávek |Automatické vytvoření plánu dodávek ze zdrojových objednávek při respektování dostupnosti a přepravní kapacity vozidel.
+|UC-02 |Upravit plán dodávek |Ruční změna plánu majitelem s opětovnou kontrolou platnosti přiřazení a rezervací.
+|UC-07 |Zobrazit přidělené jízdy |Zobrazení jízd a doručovacích údajů příslušnému řidiči v mobilní aplikaci.
+|UC-08 |Zaznamenat stav jízdy |Zaznamenání průběhu jízdy včetně offline provozu a následné synchronizace.
 |===
 
-Používají se původní názvy a identifikátory UC. `UC-03 Ověřit dostupnost vozidla`, `UC-04 Posoudit kapacitu vozidla` a `UC-16 Získat údaje objednávek` zůstávají podpůrnými UC. `UC-09 Potvrdit navrženou změnu stavu jízdy` zůstává samostatným případem užití, není součástí každé změny stavu řidičem.
+UC-03 (Ověřit dostupnost vozidla), UC-04 (Posoudit kapacitu vozidla) a UC-16 (Získat údaje objednávek) jsou podpůrnými případy užití plánování. UC-09 (Potvrdit navrženou změnu stavu jízdy) je samostatný případ užití pro potvrzování změn navržených jiným oprávněným uživatelem.
 
-== Pracovní pravidla společná scénářům
+== Provozní pravidla
 
-* R-01: Systém spouští automatické plánování každou noc v *02:00*, bez ručního sestavování plánu majitelem. V modelu jde o časově spouštěnou interní činnost, nikoli nového lidského aktéra.
-* R-02: Systém získává přes API existujícího výrobního systému seznam objednávek a podklady pro dopravu. Směr technického volání (vyžádání vs. zasílání ze zdrojové aplikace) je podle současného katalogu navržen jako načítání, definitivní integrační kontrakt se teprve sjednotí s kolegou.
-* R-03: Majitel eviduje vozidla, jejich přepravní parametry a platnost STK; jako jediný ručně upravuje plán.
-* R-04: Rezervace vzniká *jen pro vozidlo* v plánovaném intervalu od začátku nakládky do konce poslední vykládky. Navazující intervaly se nedostávají do kolize, pokud se časově nepřekrývají.
-* R-05: Každá vytvářená nebo měněná jízda musí projít kontrolou dostupnosti a kapacity: hmotnost (kg), objem (m³), rozměry nedělitelných položek. Překročení zablokuje uložení a zobrazí důvod. Není požadováno 3D rozmístění nákladu.
-* R-06: Jedna jízda může obsahovat více objednávek; objednávku lze rozdělit na přepravované části s dohledatelnou vazbou na původní objednávku.
-* R-07: Řidič používá výhradně mobilní aplikaci a vidí pouze své přidělené jízdy. Záznamy o jízdě mohou vznikat offline; po návratu připojení se synchronizují automaticky a duplicitní odeslání nevytváří další událost.
-* R-08: Automatické plánování nesmí měnit již ručně upravené a potvrzené části plánu bez zásahu majitele; nové objednávky se do existujícího plánu doplňují. Pokud nelze objednávku naplánovat, zůstává v seznamu nevyřešených objednávek s důvodem.
-* R-09: Při výběru řidiče se zohlední dosavadní přiřazené jízdy, aby jedna osoba neměla dvě souběžné jízdy. Nevytváří se však samostatná časová rezervace řidiče ani evidence směn a dovolených.
-* R-10: Stav jízdy je pro návrh `Plánována`, `Na cestě`, `Dokončena`, `Zrušena`. Příjezd k zákazníkovi a předání jednotlivých objednávek jsou evidované události. Zrušení je logické; historie a logy zůstávají zachovány.
-* R-11: Majitel může navrhnout změnu stavu již zahájené jízdy; návrh se provede až po výslovném potvrzení řidičem prostřednictvím UC-09. Samotný řidič svůj stav zaznamenává prostřednictvím UC-08 bez dalšího potvrzení.
+* R-01: Automatické plánování probíhá každý den ve 02:00 bez nutnosti ručního spouštění.
+* R-02: Systém získává přes API existujícího výrobního systému objednávky a údaje potřebné pro jejich doručení. Struktura a provozní podmínky rozhraní budou stanoveny v integrační specifikaci.
+* R-03: Majitel eviduje vozidla, jejich přepravní parametry a platnost STK a jako jediný ručně upravuje plán dodávek.
+* R-04: Časová rezervace se vztahuje pouze na vozidlo a pokrývá interval od zahájení nakládky do dokončení poslední vykládky. Dva časově navazující nepřekrývající se intervaly nejsou konfliktní.
+* R-05: Při vytvoření a změně jízdy se posuzuje dostupnost vozidla a přepravní kapacita podle hmotnosti, objemu a rozměrů nedělitelných položek. Překročení kapacity znemožní uložení daného přiřazení.
+* R-06: Jedna jízda může zahrnovat více objednávek a jednu objednávku lze rozdělit do více jízd. Každá přepravovaná část zůstává dohledatelně navázána na zdrojovou objednávku.
+* R-07: Řidič používá mobilní aplikaci a má přístup pouze ke svým přiděleným jízdám. Události zaznamenané bez připojení se po jeho obnovení automaticky synchronizují; opakované odeslání nevytváří duplicitní událost.
+* R-08: Noční plánování zachovává již potvrzené ruční úpravy plánu. Objednávky, které nelze platně naplánovat, jsou vedeny samostatně s uvedením důvodu.
+* R-09: Při přiřazení řidiče se přihlíží k jeho dosavadním jízdám tak, aby nevznikaly časové překryvy. Nevzniká samostatná evidence časových rezervací řidičů ani správa směn a dovolených.
+* R-10: Základní stavy jízdy jsou `Plánována`, `Na cestě`, `Dokončena` a `Zrušena`. Příjezd a předání objednávky jsou zaznamenávané události. Zrušení je logické a zachovává historii jízdy.
+* R-11: Změnu stavu probíhající jízdy navrženou majitelem musí před jejím uplatněním potvrdit řidič v UC-09. Vlastní události jízdy řidič zaznamenává v UC-08.
 
 == UC-01 - Naplánovat dodávky objednávek
 
@@ -92,12 +87,12 @@ Používají se původní názvy a identifikátory UC. `UC-03 Ověřit dostupnos
 * *Částečný úspěch:* Platné části plánu jsou uloženy; nenaplánované objednávky a důvody jsou zobrazeny majiteli.
 * *Neúspěch:* Při chybě API nevznikne nový plán, původní platné záznamy zůstanou zachovány.
 
-=== Analytická kontrola a otázky
+=== Doplňující pravidla
 
-* Ověřit AK-FP-07: dvě současná ukládání nikdy neskončí dvěma platnými rezervacemi stejného vozidla v překrývajícím se čase.
-* Ověřit AK-FP-36: u 1 000 kg nákladu a vozidla s nosností 800 kg nelze plán uložit.
-* Ověřit AK-FP-30 a AK-FP-31: bez ručního sestavování vznikne plán s konkrétním vozidlem a řidičem.
-* K dalšímu potvrzení: zdroj seznamu řidičů; přesné pravidlo spojování objednávek a dělení položek; technický směr integrace přes API. Předloženo jako týmové předpoklady R-02, R-06, R-09.
+* Při souběžném ukládání nesmějí vzniknout dvě platné rezervace téhož vozidla v překrývajícím se intervalu (FP-07).
+* Při překročení kapacity vozidla se pro dotčený náklad nevytvoří platné přiřazení; důvod zůstává dohledatelný (FP-36).
+* Plánování vytváří přiřazení vozidel a řidičů automaticky; nenaplánované objednávky se zobrazují majiteli s důvodem (FP-30, FP-31).
+* Podrobnosti výběru řidičů, rozdělování objednávek a datového rozhraní upřesňují navazující pravidla plánování a integrace.
 
 === Activity diagram UC-01
 
@@ -150,11 +145,11 @@ image::../../out/diagrams/activity/activity-uc-01/activity-uc-01.svg[Activity di
 * *Úspěch:* Je uložena právě jedna aktuální verze plánu; zůstává splněna dostupnost a kapacita vozidel, změna je auditovatelná.
 * *Neúspěch:* Poslední platná verze plánu a rezervací zůstává zachována, uživatel zná důvod odmítnutí.
 
-=== Analytická kontrola a otázky
+=== Doplňující pravidla
 
-* Ověřit AK-FP-32 a NFP-03: změnu uloží jen majitel, nikoli dělník nebo řidič.
-* Ověřit AK-FP-07 a AK-FP-36 na zamítnutém překryvu a přetížení.
-* UC-02 *nenahrazuje* UC-09: změna stavu již probíhající jízdy navržená majitelem podléhá výslovnému potvrzení řidiče.
+* Ruční změnu plánu může provést pouze majitel; nepřípustné požadavky jiných rolí se odmítnou (FP-32, NFP-03).
+* Před uložením změny se znovu ověřuje časová dostupnost i přepravní kapacita vozidla (FP-07, FP-36).
+* Změna stavu probíhající jízdy navržená majitelem podléhá samostatnému potvrzení řidičem v UC-09.
 
 === Activity diagram UC-02
 
@@ -205,11 +200,11 @@ image::../../out/diagrams/activity/activity-uc-02/activity-uc-02.svg[Activity di
 * *Úspěch:* Řidič má k dispozici pouze své přidělené jízdy a údaje potřebné pro doručení; data jsou připravena pro podporované offline úkony.
 * *Neúspěch:* Cizí údaje nebyly zpřístupněny; poslední lokální záznamy o událostech nejsou ztraceny.
 
-=== Analytická kontrola a otázky
+=== Doplňující pravidla
 
-* Ověřit AK-FP-11: po automatickém přidělení se jízda objeví příslušnému řidiči.
-* Ověřit AK-FP-12: u více objednávek jsou dohledatelné všechny relevantní doručovací adresy.
-* Ověřit NFP-03: záměna ID v požadavku nezpřístupní cizí jízdy.
+* Seznam jízd obsahuje pouze přiřazení přihlášeného řidiče; přístup k údajům cizí jízdy se odmítne (NFP-03).
+* Detail každé jízdy poskytuje doručovací údaje ke všem zahrnutým objednávkám a jejich přepravovaným částem (FP-11, FP-12).
+* Offline zobrazení vychází z dříve načtených údajů a musí rozlišovat jejich případnou neaktuálnost.
 
 === Activity diagram UC-07
 
@@ -264,46 +259,15 @@ image::../../out/diagrams/activity/activity-uc-07/activity-uc-07.svg[Activity di
 * *Úspěch offline (lokální):* Událost je bezpečně uložena v telefonu jako `Čeká na synchronizaci`; po synchronizaci je potvrzena centrálně.
 * *Neúspěch:* Nepřípustná změna není provedena; konflikt je identifikován a událost není ztracena bez informace o jejím osudu.
 
-=== Analytická kontrola a otázky
+=== Doplňující pravidla
 
-* Ověřit AK-FP-13 až AK-FP-17 na různých průchodech téhož UC.
-* Ověřit AK-FP-20 a AK-FP-21: offline záznam, automatický přenos po obnovení spojení a zobrazení výsledku.
-* Ověřit AK-FP-37: zrušení ponechá záznam jízdy a logy; offline událost jej znovu neotevře.
-* Podrobnosti o povolených přechodech a zdůvodnění zrušení budou předmětem následného stavového modelu, nemají být bez odsouhlasení vydávány za definitivní pravidla.
+* Zahájení, příjezd, předání, dokončení a přípustné zrušení představují různé průchody jedním případem užití (FP-13 až FP-17).
+* Offline událost musí zůstat zachována do zpracování; po obnovení připojení probíhá synchronizace automaticky (FP-20, FP-21).
+* Zrušená jízda zůstává v historii a opožděná offline událost ji nesmí sama obnovit (FP-37).
+* Povolené přechody stavů a povinné údaje při zrušení jsou součástí navazujícího stavového modelu.
 
 === Activity diagram UC-08
 
 Zdroj: link:../../diagrams/activity/activity-uc-08.puml[activity-uc-08.puml].
 
 image::../../out/diagrams/activity/activity-uc-08/activity-uc-08.svg[Activity diagram UC-08,align="center"]
-
-== Návaznost na čtyři Activity diagramy
-
-[cols="1,3,4",options="header"]
-|===
-|Soubor |Scénář |Ověřovaná analytická otázka
-|link:../../diagrams/activity/activity-uc-01.puml[activity-uc-01.puml] |UC-01 H1, A3, A4, E1 až E3 |Co se stane při neúplných údajích, výpadku API a nenalezení přípustného plánu?
-|link:../../diagrams/activity/activity-uc-02.puml[activity-uc-02.puml] |UC-02 H1, A2, E1 až E4 |Zablokují kontroly i neoprávněnou, zastaralou nebo kapacitně neplatnou změnu?
-|link:../../diagrams/activity/activity-uc-07.puml[activity-uc-07.puml] |UC-07 H1, A1, A2, E1 až E3 |Jak aplikace pracuje s vlastními jízdami online, offline a při chybě oprávnění?
-|link:../../diagrams/activity/activity-uc-08.puml[activity-uc-08.puml] |UC-08 H1, A1, E1, E3, E4 |Jak odlišíme lokální uložení od serverového potvrzení a zamezíme obnově zrušené jízdy?
-|===
-
-== Shrnutí akceptačních kontrol pro společné review
-
-[cols="2,4,4",options="header"]
-|===
-|UC |Úspěšná zkouška |Negativní zkouška
-|UC-01 |Soubor objednávek vede k plánu se správným vozidlem a řidičem (AK-FP-30, AK-FP-31) |Překryv rezervací a 1 000 kg na 800 kg vozidlo nejsou přijaty (AK-FP-07, AK-FP-36)
-|UC-02 |Majitel uloží přípustnou změnu (AK-FP-32) |Dělník, kolidující interval či přetížené vozidlo změnu neuloží (NFP-03, AK-FP-07, AK-FP-36)
-|UC-07 |Řidič zobrazí své jízdy a doručovací adresy (AK-FP-11, AK-FP-12) |Řidič nezíská data cizího uživatele (NFP-03)
-|UC-08 |Zahájení, předání, dokončení a offline synchronizace se projeví ve stavu jízdy (AK-FP-13 až AK-FP-16, AK-FP-21) |Offline aktualizace neobnoví zrušenou jízdu a neoprávněné změny se nezapíší (AK-FP-37, NFP-03)
-|===
-
-== Otevřené kroky a kontrola
-
-. *Analytik:* Předat pracovní pravidla R-01 až R-11 kolegovi, který právě aktualizuje katalog požadavků a UC model. Nepřepisovat jeho soubory bez domluvy.
-. *Tým:* Potvrdit zvláště R-02 (směr API komunikace), R-06 (dělení objednávek), R-09 (výběr řidiče) a R-10 (stavový model).
-. *Kontrolující (jiný člen):* Projít scénáře H1 a nejméně jednu chybovou větev u UC-01 a UC-08; porovnat s katalogem a Activity diagramy.
-. *Dokumentarista:* Po sladění obsahu s aktuálním katalogem exportovat SVG z `.puml` a ověřit soulad diagramů a scénářů.
-
-Pracovní verze vytvořena 29. 10. 2026; zatím čeká na týmovou validaci.
