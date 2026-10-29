@@ -1,0 +1,42 @@
+@startuml
+!pragma useVerticalIf on
+title UC-08 - Zaznamenat stav jízdy\nOnline / offline událost a synchronizace
+skinparam backgroundColor white
+|Řidič|
+start
+:Otevřít svoji jízdu a zvolit událost;
+|Mobilní aplikace|
+:Vytvořit událost s jednoznačným ID;
+:Zajistit její lokální uchování\npro případ výpadku odpovědi;
+if (Je dostupné připojení?) then (ano)
+  :Odeslat událost;
+else (ne)
+  :Trvale uložit událost do lokální fronty;
+  :Zobrazit "Čeká na synchronizaci";
+  while (Je připojení stále nedostupné?) is (ano)
+    :Zachovat lokální událost\ni při ukončení aplikace;
+  endwhile (ne)
+  :Automaticky odeslat čekající událost\nse stejným ID;
+endif
+|Systém|
+:Ověřit vlastníka jízdy, oprávnění\na povolený přechod;
+if (Událost už byla přijata?) then (ano)
+  :Vrátit existující výsledek\nbez duplicitního zápisu;
+else (ne)
+  if (Událost je přípustná\nv aktuálním stavu?) then (ano)
+    :Zapsat událost právě jednou;\nupravit stav a zachovat historii;
+    :Potvrdit přijetí a aktuální stav;
+  else (ne)
+    :Odmítnout konfliktní změnu;\nneobnovit zrušenou jízdu;
+    :Vrátit důvod odmítnutí;
+  endif
+endif
+|Mobilní aplikace|
+if (Přijetí potvrzeno?) then (ano)
+  :Označit událost jako synchronizovanou;\nzobrazit aktuální stav;
+else (ne)
+  :Zachovat informaci o odmítnuté\nnebo dosud nepotvrzené události;
+  :Zobrazit upozornění řidiči;
+endif
+stop
+@enduml
