@@ -1,0 +1,39 @@
+@startuml
+!pragma useVerticalIf on
+title UC-07 - Zobrazit přidělené jízdy\nMobilní přehled online / offline
+skinparam backgroundColor white
+|Řidič|
+start
+:Otevřít přehled přidělených jízd;
+|Mobilní aplikace|
+if (Je dostupné připojení?) then (ano)
+  :Požádat server o vlastní jízdy;
+  |Systém|
+  if (Ověřený řidič a přístup povolen?) then (ano)
+    :Vybrat pouze jízdy tohoto řidiče;
+    :Vrátit seznam a doručovací údaje;
+    |Mobilní aplikace|
+    :Aktualizovat lokální přehled;\nzachovat čekající offline události;
+  else (ne)
+    |Mobilní aplikace|
+    :Odmítnout zobrazení chráněných údajů;
+    stop
+  endif
+else (ne)
+  if (Jsou k dispozici vlastní\ndříve načtené jízdy?) then (ano)
+    :Načíst lokálně uložené jízdy;\noznačit datum poslední aktualizace;
+  else (ne)
+    :Zobrazit nedostupnost přehledu;\nnevymýšlet nové jízdy;
+    stop
+  endif
+endif
+if (Seznam je prázdný?) then (ano)
+  :Zobrazit "Nemáte přidělené jízdy";
+else (ne)
+  |Řidič|
+  :Vybrat jednu ze svých jízd;
+  |Mobilní aplikace|
+  :Zobrazit termín, vozidlo, adresy\na jednotlivé objednávky / části;
+endif
+stop
+@enduml
