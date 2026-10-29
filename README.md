@@ -8,7 +8,7 @@ Hlavním cílem první etapy projektu je **plánování dodávek objednávek**, 
 
 Úkoly v rámci projektu evidujeme a rozdělujeme pomocí Trello:
 
-[Trello – Cinazes](https://trello.com/invite/b/6ac7875a20c978b0a22ad65d/ATTI57d0a0857b720121b6c615207fe8997b5B62DAF6/cinazes)
+[Trello – Cinazes](https://trello.com/b/IAkfWEJG/%C4%8Dinazes)
 
 GitHub slouží pro ukládání a verzování projektové dokumentace, analytických modelů, UML diagramů a dalších artefaktů vznikajících během analýzy.
 
@@ -30,7 +30,7 @@ AsciiDoc používáme například pro:
 - scénáře,
 - slovník pojmů,
 - analytickou dokumentaci,
-- projektový plán.
+- projektové řízení.
 
 ### PlantUML
 
@@ -75,7 +75,12 @@ nnpsw-delivery-planning/
 ├── README.md
 │
 ├── docs/
-│   └── zadani.adoc
+│   ├── analysis/
+│   │   └── zadani.adoc
+│   │
+│   └── project-management/
+│       ├── tym.adoc
+│       └── rizika.adoc
 │
 ├── diagrams/
 │   └── ...
@@ -94,11 +99,36 @@ nnpsw-delivery-planning/
 
 Obsahuje hlavní projektovou dokumentaci.
 
+Dokumentace je rozdělena podle jejího účelu na analytickou dokumentaci a dokumentaci týkající se řízení projektu.
+
+#### `docs/analysis/`
+
+Obsahuje dokumentaci týkající se samotné analýzy navrhovaného informačního systému.
+
 Aktuálně se zde nachází:
 
 - `zadani.adoc` – aktuální zadání semestrální práce.
 
-V průběhu projektu zde budou přibývat další dokumenty související s analýzou systému.
+V průběhu projektu zde budou přibývat další analytické artefakty, například:
+
+- katalog požadavků,
+- slovník pojmů,
+- seznam aktérů,
+- Use Case specifikace,
+- scénáře,
+- popisy analytických modelů,
+- další výstupy vznikající během analýzy systému.
+
+#### `docs/project-management/`
+
+Obsahuje dokumentaci týkající se organizace a řízení semestrálního projektu.
+
+Aktuálně se zde nachází:
+
+- `tym.adoc` – rozdělení týmových rolí a odpovědností,
+- `rizika.adoc` – registr hlavních projektových rizik.
+
+V průběhu projektu zde mohou přibývat další dokumenty související s řízením práce týmu.
 
 ### `diagrams/`
 
@@ -233,4 +263,6 @@ Díky tomu lze pomocí Gitu přesně sledovat:
 - co bylo odstraněno,
 - jak se dokumentace a modely vyvíjely v čase.
 
-Vygenerované SVG soubory slouží především pro grafické zobrazení diagramů v dokumentaci.
+Vygenerované SVG soubory slouží především pro grafické zobrazení diagramů v dokumentaci a neupravují se ručně.
+
+Před zahájením práce je vhodné načíst aktuální změny z repozitáře a po dokončení ucelené části práce vytvořit commit s výstižným popisem změny.

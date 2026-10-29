@@ -1,0 +1,37 @@
+@startuml
+top to bottom direction
+
+skinparam backgroundColor white
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam actorStyle stickman
+skinparam linetype polyline
+skinparam nodesep 55
+skinparam ranksep 75
+skinparam ArrowColor #475569
+
+title Use Case model — generalizace interních rolí
+
+actor "Interní uživatel\n(obecná role)" as Employee
+actor "Majitel" as Owner
+actor "Dělník" as Worker
+actor "Řidič" as Driver
+actor "Pověřený uživatel evidence\n(pracovní role, O-01)" as RecordsUser #FFF4CC
+
+Employee <|-- Owner
+Employee <|-- Worker
+Employee <|-- Driver
+Employee <|-- RecordsUser
+
+' Hidden links give the specialized roles a stable left-to-right order.
+Owner -[hidden]right- Worker
+Worker -[hidden]right- Driver
+Driver -[hidden]right- RecordsUser
+
+legend bottom left
+  Každá specializace přebírá účast na UC-14 a UC-15.
+  Trojúhelník míří k obecné roli Interní uživatel.
+  Přiřazení pracovní role evidence se musí potvrdit v O-01.
+endlegend
+@enduml
