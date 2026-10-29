@@ -1,0 +1,35 @@
+@startuml
+!pragma useVerticalIf on
+title UC-02 - Upravit plán dodávek\nRuční změna majitelem
+skinparam backgroundColor white
+|Majitel|
+start
+:Vybrat plánovanou jízdu\na požádat o úpravu;
+|Systém|
+:Zobrazit termín, vozidlo, řidiče\na objednávky;
+|Majitel|
+:Změnit termín, vozidlo\nnebo přepravované části;
+:Požádat o uložení;
+|Systém|
+if (Oprávnění majitele?) then (ano)
+  if (Jízda stále nezahájená\na verze platná?) then (ano)
+    :Ověřit dostupnost vozidla (UC-03);\nkapacitu (UC-04) a vazby objednávek;
+    if (Kapacita a termín vyhovují?) then (ano)
+      :Znovu ověřit rezervace\npři souběžném uložení;
+      if (Nevznikl konflikt?) then (ano)
+        :Atomicky uložit změnu plánu\na rezervací; zapsat audit;
+        :Zpřístupnit aktualizovaný plán;
+      else (ne)
+        :Odmítnout uložení;\nzobrazit kolidující interval;
+      endif
+    else (ne)
+      :Zobrazit překročenou kapacitu\nnebo kolizi; nic neuložit;
+    endif
+  else (ne)
+    :Odmítnout přepsání změněné\nnebo zahájené jízdy;
+  endif
+else (ne)
+  :Odmítnout neoprávněný pokus;\nnezměnit plán;
+endif
+stop
+@enduml
