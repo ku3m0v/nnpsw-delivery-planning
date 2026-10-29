@@ -1,0 +1,44 @@
+@startuml
+!pragma useVerticalIf on
+title UC-01 - Naplánovat dodávky objednávek\nNoční automatické plánování
+skinparam backgroundColor white
+|Systém plánování|
+start
+:Ve 02:00 zahájit automatické plánování;
+:Vyžádat objednávky přes API (UC-16);
+|Existující výrobní systém|
+:Poskytnout seznam objednávek\na doručovací parametry;
+|Systém plánování|
+if (Údaje z API dostupné?) then (ano)
+  :Porovnat ID, odstranit duplicity\na zachovat existující plán;
+  if (Existují objednávky k plánování?) then (ano)
+    repeat
+      :Vybrat další objednávku / část;
+      if (Povinné údaje úplné?) then (ano)
+        :Vyhodnotit náklad a termín;
+        :Ověřit vhodná vozidla\n(kapacita UC-04, dostupnost UC-03);
+        if (Existuje přípustné vozidlo a řidič?) then (ano)
+          :Navrhnout přiřazení vozidla,\nřidiče a termínu;
+          if (Nevzniká konflikt při uložení?) then (ano)
+            :Uložit platnou jízdu a rezervaci;
+          else (ne)
+            :Zachovat platné rezervace;\nzařadit objednávku mezi nevyřešené;
+          endif
+        else (ne)
+          :Zapsat nenaplánovanou objednávku\na důvod;
+        endif
+      else (ne)
+        :Označit objednávku jako\nvyžadující doplnění údajů;
+      endif
+    repeat while (Zbývá objednávka?) is (ano)
+    :Uložit výsledek běhu a důvody výjimek;
+  else (ne)
+    :Zaznamenat běh bez změn;
+  endif
+  :Zpřístupnit plán a výjimky majiteli;\npřidělené jízdy řidičům;
+else (ne)
+  :Zapsat chybu API;\nzachovat dosavadní platný plán;
+  :Oznámit chybu majiteli;
+endif
+stop
+@enduml
