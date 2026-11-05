@@ -1,0 +1,73 @@
+@startuml
+title Doménový model tříd – Plánování a realizace dodávek
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam classFontColor #17243A
+skinparam classBackgroundColor #F6F8FC
+skinparam classBorderColor #456080
+skinparam packageBackgroundColor #FFFFFF
+skinparam packageBorderColor #CBD5E1
+skinparam arrowColor #5D718C
+skinparam linetype ortho
+hide empty methods
+
+package "Objednávky" {
+  class "Objednávka" as Objednavka {
+    id
+    adresaDoručení
+  }
+  class "PřepravovanáČást" as PrepravovanaCast {
+    id
+    hmotnost
+    objem
+    rozměry
+  }
+}
+package "Plánování a realizace" {
+  class "Dodávka" as Dodavka {
+    id
+    plánovanýTermín
+  }
+  class "Jízda" as Jizda {
+    id
+    stav
+  }
+  class "RezervaceVozidla" as RezervaceVozidla {
+    id
+    odNakládky
+    doVykládky
+  }
+  class "UdálostJízdy" as UdalostJizdy {
+    id
+    typ
+    časUdálosti
+  }
+}
+package "Vozový park" {
+  class "Vozidlo" as Vozidlo {
+    id
+    typ
+    nosnost
+    objemNákladovéhoProstoru
+    rozměryLožnéPlochy
+    platnostSTK
+  }
+}
+package "Uživatelé" {
+  class "Uživatel" as Uzivatel {
+    id
+    role
+  }
+}
+
+Objednavka "1" -- "0..*" PrepravovanaCast : původ nákladu
+PrepravovanaCast "0..*" -- "0..1" Jizda : zařazení do jízdy
+Dodavka "1" -- Jizda : zahrnuje
+Uzivatel "1" -- "0..*" Jizda : přidělený řidič
+Vozidlo "1" -- "0..*" Jizda : přidělené vozidlo
+Vozidlo "1" -- "0..*" RezervaceVozidla : rezervace
+Jizda "1" -- "0..1" RezervaceVozidla : časové blokování
+Jizda "1" -- "0..*" UdalostJizdy : historie průběhu
+@enduml

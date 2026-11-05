@@ -266,3 +266,7 @@ Díky tomu lze pomocí Gitu přesně sledovat:
 Vygenerované SVG soubory slouží především pro grafické zobrazení diagramů v dokumentaci a neupravují se ručně.
 
 Před zahájením práce je vhodné načíst aktuální změny z repozitáře a po dokončení ucelené části práce vytvořit commit s výstižným popisem změny.
+
+## Doménový model tříd
+
+Analytický model plánování a realizace dodávek je dostupný v [dokumentaci doménového modelu](docs/analysis/domenovy-model-trid.adoc). Diagram má [zdroj v PlantUML](diagrams/class/domain-class-model.puml) a [grafické zobrazení SVG](out/diagrams/class/domain-class-model/domain-class-model.svg).
