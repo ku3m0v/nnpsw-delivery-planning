@@ -24,7 +24,7 @@ title Use Case model — detail plánování
 
 actor "Existující interní\nvýrobní systém" as ProductionSystem
 
-rectangle "Systém pro správu firemních vozidel a plánování dodávek\n(detail sdíleného chování)" as System {
+rectangle "Systém pro správu firemních vozidel a plánování dodávek" as System {
   usecase "UC-16\nZískat údaje objednávek" as UC16
   usecase "UC-01\nNaplánovat dodávky\nobjednávek" as UC01 <<key>>
   usecase "UC-04\nPosoudit kapacitu\nvozidla" as UC04
@@ -46,8 +46,4 @@ rectangle "Systém pro správu firemních vozidel a plánování dodávek\n(deta
 
 UC16 -right- ProductionSystem : API
 
-legend bottom left
-  Stejná ID označují stejné UC jako v hlavním přehledu.
-  Include vyjadřuje vložené chování; neurčuje pořadí kroků.
-endlegend
 @enduml
