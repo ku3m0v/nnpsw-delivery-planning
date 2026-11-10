@@ -26,12 +26,12 @@ title Use Case model — hlavní přehled
 actor "Majitel" as Owner
 actor "Dělník" as Worker
 actor "Řidič" as Driver
-actor "Pověřený uživatel evidence\n(pracovní role, O-01)" as RecordsUser #FFF4CC
-actor "Interní uživatel\n(obecná role)" as Employee
+actor "Pověřený uživatel evidence" as RecordsUser #FFF4CC
+actor "Interní uživatel" as Employee
 actor "Existující interní\nvýrobní systém" as ProductionSystem
 actor "Technická podpora\ndodavatele" as Support
 
-rectangle "Systém pro správu firemních vozidel a plánování dodávek\n(webová aplikace + mobilní aplikace řidiče + vlastní služby)" as System {
+rectangle "Systém pro správu firemních vozidel a plánování dodávek" as System {
   usecase "UC-01\nNaplánovat dodávky\nobjednávek" as UC01 <<key>>
   usecase "UC-02\nUpravit plán dodávek" as UC02 <<key>>
   usecase "UC-06\nZobrazit využití vozidel" as UC06 <<key>>
@@ -76,7 +76,7 @@ RecordsUser -- UC13
 Employee -- UC14
 Employee -- UC15
 
-UC01 -- ProductionSystem : API (přes UC-16)
+UC01 -- ProductionSystem : API
 UC15 -- Support : příjem hlášení
 
 ' Hidden links keep the actor roles in the same order as their goals.
@@ -85,11 +85,4 @@ Worker -[hidden]right-> Driver
 Driver -[hidden]right-> RecordsUser
 RecordsUser -[hidden]right-> Employee
 
-legend bottom left
-  Modrá výplň: 5 klíčových UC pro cvičení 6.
-  Podpůrné UC-03, UC-04 a UC-16: samostatný detail plánování.
-  Dědičnost společných služeb: samostatný diagram aktérů.
-  A-07 je pracovní role k potvrzení v O-01.
-  UC-01 automaticky přiřazuje vozidla i řidiče (O-12).
-endlegend
 @enduml
