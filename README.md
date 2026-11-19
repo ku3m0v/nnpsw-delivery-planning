@@ -270,3 +270,13 @@ Před zahájením práce je vhodné načíst aktuální změny z repozitáře a 
 ## Doménový model tříd
 
 Analytický model plánování a realizace dodávek je dostupný v [dokumentaci doménového modelu](docs/analysis/domenovy-model-trid.adoc). Diagram má [zdroj v PlantUML](diagrams/class/domain-class-model.puml) a [grafické zobrazení SVG](out/diagrams/class/domain-class-model/domain-class-model.svg).
+
+## Sekvenční diagramy (cvičení 9)
+
+Tři sekvenční diagramy jsou popsány v [dokumentaci sekvenčních diagramů](docs/analysis/sekvencni-diagramy.adoc):
+
+- [SEQ-01 – Automatické plánování dodávek](diagrams/sequence/sequence-uc-01.puml) ([SVG](out/diagrams/sequence/sequence-uc-01/sequence-uc-01.svg)),
+- [SEQ-02 – Ruční změna termínu a kolize](diagrams/sequence/sequence-uc-02.puml) ([SVG](out/diagrams/sequence/sequence-uc-02/sequence-uc-02.svg)),
+- [SEQ-03 – Offline dokončení jízdy](diagrams/sequence/sequence-uc-08.puml) ([SVG](out/diagrams/sequence/sequence-uc-08/sequence-uc-08.svg)).
+
+Diagramy navazují na již zpracované případy užití, jejich scénáře, activity diagramy a doménový model. Zdrojem pro další úpravy zůstávají soubory PlantUML.

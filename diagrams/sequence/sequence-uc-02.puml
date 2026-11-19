@@ -1,0 +1,45 @@
+@startuml
+title SEQ-02 – Ruční změna termínu a kolize rezervace\nUC-02, hlavní scénář H1 / chybový průběh E2
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam sequenceParticipantBackgroundColor #EDF2F8
+skinparam sequenceParticipantBorderColor #456080
+skinparam sequenceArrowColor #456080
+skinparam sequenceLifeLineBorderColor #7890A8
+skinparam sequenceGroupBorderColor #7890A8
+skinparam sequenceGroupBackgroundColor #FFFFFF
+hide footbox
+
+actor "Majitel" as M
+participant "Koordinace\núpravy plánu" as K
+participant "j : Jízda" as J
+participant "v : Vozidlo" as V
+participant "r : RezervaceVozidla" as R
+
+M -> K: změnitTermín(jízdaID, novýInterval)
+activate K
+K -> J: získatPlánAStav(jízdaID)
+J --> K: Plánována, verze,\nvozidlo, náklad a termín
+K -> K: ověřit roli Majitel,\nnezahájenou jízdu a aktuální verzi
+K -> V: posouditKapacitu(náklad)
+V --> K: kapacita vyhovuje
+K -> V: zjistitRezervace(novýInterval)
+V -> R: získatInterval()
+R --> V: odNakládky, doVykládky
+V --> K: existující platné intervaly
+K -> K: vyhodnotit překryv\ns ostatními rezervacemi
+
+alt [existuje časová kolize]
+  K --> M: odmítnuto – kolidující vozidlo a interval;\npůvodní plán beze změny
+else [bez kolize při uložení]
+  K -> K: atomicky znovu ověřit podmínky uložení
+  K -> J: aktualizovatPlán(novýInterval)
+  J --> K: změna zapsána
+  K -> R: aktualizovatInterval(novýInterval)
+  R --> K: rezervace aktualizována
+  K -> K: zaznamenat auditní změnu
+  K --> M: změna plánu uložena
+end
+
+deactivate K
+@enduml

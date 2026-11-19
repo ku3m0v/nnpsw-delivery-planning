@@ -1,0 +1,46 @@
+@startuml
+title SEQ-01 – Automatické plánování dodávek\nUC-01, hlavní úspěšný scénář H1
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam sequenceParticipantBackgroundColor #EDF2F8
+skinparam sequenceParticipantBorderColor #456080
+skinparam sequenceArrowColor #456080
+skinparam sequenceLifeLineBorderColor #7890A8
+skinparam sequenceGroupBorderColor #7890A8
+skinparam sequenceGroupBackgroundColor #FFFFFF
+hide footbox
+
+participant "Časová událost\n02:00" as Cas
+participant "Koordinace\nplánování" as K
+participant "Interní systém\n(API)" as IS
+participant "v : Vozidlo" as V
+
+Cas -> K: zahájitNočníPlánování()
+activate K
+K -> IS: získatObjednávky()
+activate IS
+IS --> K: ID, adresy, termíny,\nparametry přepravovaného nákladu
+deactivate IS
+K -> K: ověřit úplnost a duplicity;\nzachovat existující platný plán
+
+loop [pro každou plánovatelnou objednávku / část]
+  K -> K: určit požadovaný náklad\na interval od nakládky do vykládky
+  K -> V: zjistitPřepravníKapacitu()
+  V --> K: nosnost, objem, rozměry
+  K -> V: zjistitRezervovanéIntervaly()
+  V --> K: platné intervaly rezervací
+  K -> K: ověřit kapacitu, dostupnost\na přiřazení řidiče bez překryvu jízd
+  K -> K: znovu ověřit časové kolize\npři atomickém uložení
+
+  create participant "d : Dodávka" as D
+  K -->> D: «create»(termín, objednávky)
+  create participant "j : Jízda" as J
+  K -->> J: «create»(vozidlo, řidič, části)
+  create participant "r : RezervaceVozidla" as R
+  K -->> R: «create»(vozidlo, odNakládky, doVykládky)
+end
+
+K -> K: zaznamenat výsledek nočního běhu;\nzpřístupnit plán a přidělené jízdy
+K --> Cas: platný plán a přidělení jsou dostupné
+deactivate K
+@enduml

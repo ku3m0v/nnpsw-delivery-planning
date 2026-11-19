@@ -1,0 +1,48 @@
+@startuml
+title SEQ-03 – Offline dokončení jízdy a synchronizace\nUC-08, alternativní scénář A1; konfliktní průběh E3
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam sequenceParticipantBackgroundColor #EDF2F8
+skinparam sequenceParticipantBorderColor #456080
+skinparam sequenceArrowColor #456080
+skinparam sequenceLifeLineBorderColor #7890A8
+skinparam sequenceGroupBorderColor #7890A8
+skinparam sequenceGroupBackgroundColor #FFFFFF
+hide footbox
+
+actor "Řidič" as Ridic
+participant "Mobilní\naplikace" as App
+participant "Koordinace\nudálostí jízdy" as K
+participant "j : Jízda" as J
+
+Ridic -> App: dokončitJízdu(jízdaID) [bez připojení]
+activate App
+App -> App: vytvořit záznam s jedinečným\nudálostID, typem a časem
+App -> App: uložit do odolné lokální fronty
+App --> Ridic: uloženo lokálně;\nČeká na synchronizaci
+deactivate App
+
+== Po obnovení připojení ==
+App ->> K: synchronizovat(událostID, jízdaID, typ, čas)
+activate K
+K -> J: ověřit řidiče, stav jízdy\na dosud přijatá ID událostí
+J --> K: přidělení, stav, historie událostí
+
+alt [stejné událostID již přijato]
+  K ->> App: výsledek(událostID, již přijato)
+  App -> App: odebrat potvrzenou položku z fronty
+else [nové ID a povolený přechod]
+  create participant "u : UdálostJízdy" as U
+  K -->> U: «create»(událostID, dokončení, čas)
+  K -> J: zaznamenat událost a stav Dokončena
+  J --> K: platný stav a historie
+  K ->> App: výsledek(událostID, přijato, Dokončena)
+  App -> App: odebrat potvrzenou položku z fronty
+else [nové ID a nepřípustný přechod]
+  K ->> App: výsledek(událostID, odmítnuto, důvod)
+  App -> App: uchovat dohledatelný konflikt;\nneobnovovat zrušenou jízdu
+end
+
+App ->> Ridic: zpřístupnit výsledek synchronizace
+deactivate K
+@enduml
