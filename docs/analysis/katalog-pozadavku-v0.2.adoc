@@ -13,7 +13,7 @@
 == Účel a stav dokumentu
 
 Pracovní katalog pro 4. týden projektu KST/NNPSW vymezuje scope, funkční a nefunkční požadavky, navržené priority a akceptační kritéria.
-Tato aktualizace v0.1 zapracovává odpovědi předané uživatelem dne 15. 10. 2026 a následné upřesnění kapacitního omezení a potvrzování změn stavu řidičem.
+Tato aktualizace v0.2 zapracovává odpovědi předané uživatelem dne 15. 10. 2026 a následné upřesnění kapacitního omezení a potvrzování změn stavu řidičem.
 Obsahuje *43 funkčních a 7 nefunkčních požadavků*.
 
 Všechny záznamy mají společný stav *Návrh k validaci*.
@@ -674,7 +674,7 @@ Záznam vlastních událostí řidičem podle <<FP-13>> až <<FP-19>> zůstává
 
 *Požadavek:* Při ruční úpravě plánu dodávek majitelem podle <<FP-32>> musí systém ověřit platnost STK vybraného vozidla vzhledem k plánovanému termínu jízdy a zobrazit varování, pokud STK není platná nebo v průběhu termínu jízdy přestane být platná.
 
-*Akceptační kritérium AK-FP-41:* Řidič při ruční úpravě jízdy plánované na 15.11.2026 vybere vozidlo s platností STK do 14.11.2026 (nebo končící během jízdy). Systém při validaci zobrazí varování o neplatné STK v termínu jízdy. Podmínky případného potvrzení varování nebo zablokování uložení zůstávají v O-13.
+*Akceptační kritérium AK-FP-41:* Majitel při ruční úpravě jízdy plánované na 15.11.2026 vybere vozidlo s platností STK do 14.11.2026 (nebo končící během jízdy). Systém při validaci zobrazí varování o neplatné STK v termínu jízdy. Podmínky případného potvrzení varování nebo zablokování uložení zůstávají v O-13.
 
 *Zdroj:* <<CR-01>>, ve vazbě na <<FP-24>> a <<FP-32>>.
 
@@ -839,7 +839,7 @@ Pro otevřené podrobnosti není deklarována konečná přejímací připraveno
 |15 |Synchronizace |FP-21; automatické spuštění podle U05
 |16 |Montáž nábytku mimo rozsah |Scope
 |17 |Vlastní nastavení |FP-23
-|18 |Platnost STK |FP-24
+|18 |Platnost STK |FP-24; rozšířeno FP-40 až FP-43 podle CR-01
 |19 |Poškození po příjezdu |FP-19
 |20 |Historie a logy vozidel |FP-25, FP-26
 |21 |Interní použití |NFP-03
