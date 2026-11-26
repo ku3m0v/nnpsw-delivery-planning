@@ -1,11 +1,11 @@
-= Katalog požadavků v0.1
+= Katalog požadavků v0.2
 :lang: cs
 :toc:
 :toc-title: Obsah
 :toclevels: 2
 :sectnums:
-:revnumber: 0.1
-:revdate: 2026-10-15
+:revnumber: 0.2
+:revdate: 2026-11-26
 :repo: https://github.com/ku3m0v/nnpsw-delivery-planning
 :commit: 57b76690ad5a69c4310a4e22ddd12c6492c8fb6f
 :zadani: {repo}/blob/{commit}/docs/analysis/zadani.adoc
@@ -14,11 +14,11 @@
 
 Pracovní katalog pro 4. týden projektu KST/NNPSW vymezuje scope, funkční a nefunkční požadavky, navržené priority a akceptační kritéria.
 Tato aktualizace v0.1 zapracovává odpovědi předané uživatelem dne 15. 10. 2026 a následné upřesnění kapacitního omezení a potvrzování změn stavu řidičem.
-Obsahuje *39 funkčních a 7 nefunkčních požadavků*.
+Obsahuje *43 funkčních a 7 nefunkčních požadavků*.
 
 Všechny záznamy mají společný stav *Návrh k validaci*.
-Doplněná rozhodnutí jsou evidována jako zdroje U01 až U10; jejich zapracování neznamená schválení celého katalogu ani navržených priorit.
-Identifikátory FP-01 až FP-29 a NFP-01 až NFP-06 byly zachovány, nové požadavky mají navazující čísla.
+Doplněná rozhodnutí jsou evidována jako zdroje U01 až U10 a změnový požadavek <<CR-01>>; jejich zapracování neznamená schválení celého katalogu ani navržených priorit.
+Identifikátory FP-01 až FP-39 a NFP-01 až NFP-07 byly zachovány, nové požadavky ze změny CR-01 mají navazující čísla FP-40 až FP-43.
 
 Výchozí revize repozitáře `{commit}` obsahuje analytickou dokumentaci a ukázkové diagramy, nikoliv implementaci aplikace nebo automatizované testy.
 Kontrola v tomto dokumentu se týká konzistence specifikace. Akceptační kritéria jsou podkladem pro budoucí ověření aplikace.
@@ -43,7 +43,8 @@ Přesné etapové zařazení automatizace a dalších funkcí zůstává k potvr
 * Webový přístup majitele a dělníka podle jejich oprávnění a přehledy majitele.
 * Mobilní přístup řidičů na osobních telefonech s iOS nebo Androidem, práce s přidělenými jízdami, offline úkony a automatická synchronizace.
 * Oznámení pokusu o změnu stavu jízdy řidiči na cestě a uplatnění navržené změny až po jeho potvrzení.
-* Platnost STK, poškození vozidel, historie a související logy; logické zrušení jízd se zachováním historie.
+* Platnost STK včetně automatického vyloučení vozidel s neplatnou STK při plánování, varování při ruční úpravě plánu, blokování zahájení jízdy řidičem a e-mailového upozorňování na blížící se konec platnosti STK.
+* Poškození vozidel, historie a související logy; logické zrušení jízd se zachováním historie.
 * Uživatelská nastavení a hlášení problémů z obou aplikací technické podpoře dodavatele.
 * Uchování evidovaných dat alespoň dva roky, včetně finančních nákladů; u dat objednávky se lhůta počítá od založení objednávky.
 
@@ -125,6 +126,14 @@ Pokud zpřesňuje původní zadání, aktuální katalog používá toto zpřesn
 |[[U10]]U10 |Následné upřesnění |Řidič obdrží oznámení o pokusu změnit stav a navržený stav musí sám potvrdit.
 |===
 
+=== Změna zadání (Change Request CR-01)
+
+[cols="1,5",options="header"]
+|===
+|Zdroj |Zapracovaný obsah
+|[[CR-01]]CR-01 |Rozšíření práce s platností STK na základě změny zadání a následného upřesnění se zadavatelem: (1) automatické plánování nevybírá vozidlo s neplatnou STK v termínu jízdy, (2) ruční úprava plánu provede validaci a zobrazí varování při neplatné STK v termínu jízdy, (3) řidič nemůže v mobilní aplikaci zahájit jízdu při neplatné STK nebo pokud STK vyprší v průběhu termínu jízdy, (4) systém odesílá e-mailové upozornění na blížící se konec platnosti STK vozidla.
+|===
+
 == Přehled katalogu
 
 Sloupec otázek ukazuje zbývající upřesnění; nezpochybňuje již zapsané odpovědi. O-11 se týká etapového zařazení celého katalogu.
@@ -171,6 +180,10 @@ Sloupec otázek ukazuje zbývající upřesnění; nezpochybňuje již zapsané 
 |<<FP-37>> |Logické zrušení a zachování historie jízdy |P2 |O-05, O-08
 |<<FP-38>> |Oznámení pokusu o změnu stavu řidiči |P2 |O-06, O-10
 |<<FP-39>> |Potvrzení změny stavu řidičem |P2 |O-05, O-06
+|<<FP-40>> |Vyloučení vozidel s neplatnou STK při automatickém plánování |P1 |O-13
+|<<FP-41>> |Validace a varování při neplatné STK při ruční změně plánu |P1 |O-13
+|<<FP-42>> |Blokování zahájení jízdy při neplatné STK |P2 |O-06, O-13
+|<<FP-43>> |E-mailové upozornění na blížící se konec platnosti STK |P2 |O-01, O-10, O-13
 |<<NFP-01>> |Webový přístup k základní části systému |P1 |O-10
 |<<NFP-02>> |Vymezení mobilní aplikace |P2 |O-07, O-10
 |<<NFP-03>> |Omezení přístupu podle rolí a oprávnění |P1 |O-01
@@ -236,9 +249,9 @@ Automatické vytvoření plánu řeší <<FP-30>>, jeho ruční úpravy <<FP-32>
 
 *Požadavek:* Systém musí k plánované dodávce objednávky umožnit přiřazení evidovaného vozidla v rámci automatického plánování nebo oprávněné úpravy plánu majitelem.
 
-*Akceptační kritérium AK-FP-05:* Po úspěšném přiřazení je u plánované dodávky dohledatelné konkrétní vozidlo. Uložení musí respektovat zákaz konfliktních rezervací podle <<FP-07>> a blokování překročené kapacity podle <<FP-36>>.
+*Akceptační kritérium AK-FP-05:* Po úspěšném přiřazení je u plánované dodávky dohledatelné konkrétní vozidlo. Uložení musí respektovat zákaz konfliktních rezervací podle <<FP-07>>, blokování překročené kapacity podle <<FP-36>> a pravidla platnosti STK podle <<FP-40>> a <<FP-41>>.
 
-*Zdroj:* <<Z01>>, <<Z09>> (bod 7), <<U01>>, <<U08>>, <<U09>>.
+*Zdroj:* <<Z01>>, <<Z09>> (bod 7), <<U01>>, <<U08>>, <<U09>>, <<CR-01>>.
 
 [[FP-06]]
 === FP-06 — Kontrola časové dostupnosti vozidla
@@ -328,11 +341,11 @@ Vhodnost z hlediska kapacity se posuzuje podle <<FP-08>>.
 
 *Priorita:* P2.
 
-*Požadavek:* Mobilní aplikace musí řidiči umožnit zaznamenat zahájení přidělené jízdy.
+*Požadavek:* Mobilní aplikace musí řidiči umožnit zaznamenat zahájení přidělené jízdy, pokud je STK přiřazeného vozidla platná po celou dobu plánovaného termínu jízdy.
 
-*Akceptační kritérium AK-FP-13:* U přidělené jízdy ve stavu dovolujícím tento úkon řidič zaznamená zahájení a aplikace jej následně zobrazí.
+*Akceptační kritérium AK-FP-13:* U přidělené jízdy ve stavu dovolujícím tento úkon a s platnou STK podle <<FP-42>> řidič zaznamená zahájení a aplikace jej následně zobrazí. Při neplatné STK se uplatní blokování podle <<FP-42>>.
 
-*Zdroj:* <<Z04>>, <<Z09>> (bod 13).
+*Zdroj:* <<Z04>>, <<Z09>> (bod 13), <<CR-01>>.
 
 [[FP-14]]
 === FP-14 — Zaznamenání příjezdu
@@ -460,12 +473,11 @@ Preferované vozidlo a výchozí pohled jsou příklady ze zadání; konečný s
 
 *Priorita:* P2.
 
-*Požadavek:* Systém musí umožnit u jednotlivých vozidel evidovat a zobrazovat termín platnosti STK.
+*Požadavek:* Systém musí umožnit u jednotlivých vozidel evidovat a zobrazovat termín platnosti STK jako podklad pro plánování, zahajování jízd a automatické upozorňování.
 
-*Akceptační kritérium AK-FP-24:* Uživatel uloží termín platnosti STK u zkušebního vozidla a následně jej zobrazí u stejného vozidla.
-Automatické upozornění ani zákaz plánování po skončení platnosti STK nejsou v zadání stanoveny.
+*Akceptační kritérium AK-FP-24:* Uživatel uloží termín platnosti STK u zkušebního vozidla a následně jej zobrazí u stejného vozidla. Evidovaný termín platnosti je využíván při kontrolách podle <<FP-40>> až <<FP-43>>.
 
-*Zdroj:* <<Z08>>, <<Z09>> (bod 18).
+*Zdroj:* <<Z08>>, <<Z09>> (bod 18), <<CR-01>>.
 
 [[FP-25]]
 === FP-25 — Historie poškození vozidla
@@ -529,12 +541,12 @@ Kanál předání, povinný obsah hlášení a postup při selhání předání 
 
 *Priorita:* P1.
 
-*Požadavek:* Systém musí automaticky vytvářet plán dodávek na základě objednávek získaných z interního systému a dostupných vozidel při respektování časových a kapacitních omezení.
+*Požadavek:* Systém musí automaticky vytvářet plán dodávek na základě objednávek získaných z interního systému a dostupných vozidel s platnou STK při respektování časových a kapacitních omezení.
 
-*Akceptační kritérium AK-FP-30:* Pro připravenou sadu objednávek, vozidel a plánovacích vstupů, pro kterou existuje přípustný plán, systém bez ručního sestavování jednotlivých přiřazení vytvoří plán dodávek. Výsledek neporušuje <<FP-07>> ani <<FP-36>> a je dostupný majiteli v přehledu.
+*Akceptační kritérium AK-FP-30:* Pro připravenou sadu objednávek, vozidel a plánovacích vstupů, pro kterou existuje přípustný plán, systém bez ručního sestavování jednotlivých přiřazení vytvoří plán dodávek. Výsledek neporušuje <<FP-07>>, <<FP-36>> ani <<FP-40>> a je dostupný majiteli v přehledu.
 Spouštění plánování, povinné vstupy, výběr mezi více přípustnými plány a postup při nenalezení plánu se musí doplnit v O-12. Požadavek nezavádí optimalizaci tras.
 
-*Zdroj:* <<U01>>, ve vazbě na <<Z01>> a <<U09>>.
+*Zdroj:* <<U01>>, ve vazbě na <<Z01>>, <<U09>> a <<CR-01>>.
 
 [[FP-31]]
 === FP-31 — Automatické přidělení jízd řidičům
@@ -555,10 +567,10 @@ Pravidla výběru řidiče a zdroj seznamu řidičů zůstávají v O-12. Přid�
 
 *Požadavek:* Systém musí povolit ruční změny plánu dodávek pouze majiteli.
 
-*Akceptační kritérium AK-FP-32:* Majitel provede přípustnou změnu plánu a systém ji uloží. Stejný pokus řidiče nebo dělníka je odmítnut. Změna nadále podléhá <<FP-07>> a <<FP-36>>.
+*Akceptační kritérium AK-FP-32:* Majitel provede přípustnou změnu plánu a systém ji uloží. Stejný pokus řidiče nebo dělníka je odmítnut. Změna nadále podléhá kontrolám podle <<FP-07>>, <<FP-36>> a validaci platnosti STK podle <<FP-41>>.
 Toto omezení se týká ručních změn plánu; nebrání automatickému plánování podle <<FP-30>> ani záznamům průběhu jízdy řidičem. Změna stavu jízdy „na cestě“ musí respektovat <<FP-39>>.
 
-*Zdroj:* <<U08>>, <<U09>>, <<U10>>.
+*Zdroj:* <<U08>>, <<U09>>, <<U10>>, <<CR-01>>.
 
 [[FP-33]]
 === FP-33 — Více objednávek v jedné jízdě
@@ -643,6 +655,50 @@ Kanál oznámení, doručení při offline režimu a časové limity zůstávaj�
 Záznam vlastních událostí řidičem podle <<FP-13>> až <<FP-19>> zůstává umožněn. Odmítnutí žádosti, neodpovězení, více souběžných žádostí a přípustné přechody zůstávají v O-05 a O-06.
 
 *Zdroj:* <<U05>>, upřesněno v <<U10>>.
+
+[[FP-40]]
+=== FP-40 — Vyloučení vozidel s neplatnou STK při automatickém plánování
+
+*Priorita:* P1.
+
+*Požadavek:* Při automatickém plánování dodávek podle <<FP-30>> nesmí systém vybrat ani přiřadit vozidlo, jehož STK je v plánovaném termínu jízdy neplatná nebo by v průběhu tohoto termínu pozbyla platnosti.
+
+*Akceptační kritérium AK-FP-40:* Pro zkušební jízdu plánovanou na 15.11.2026 systém při automatickém plánování nezvolí vozidlo s platností STK do 14.11.2026 ani vozidlo s platností STK končící v průběhu intervalu jízdy, i když vozidlo vyhovuje časově i kapacitně. Pokud není k dispozici žádné jiné vhodné vozidlo s platnou STK, objednávka zůstane nenaplánována s uvedením důvodu.
+
+*Zdroj:* <<CR-01>>, ve vazbě na <<FP-24>> a <<FP-30>>.
+
+[[FP-41]]
+=== FP-41 — Validace a varování při neplatné STK při ruční změně plánu
+
+*Priorita:* P1.
+
+*Požadavek:* Při ruční úpravě plánu dodávek majitelem podle <<FP-32>> musí systém ověřit platnost STK vybraného vozidla vzhledem k plánovanému termínu jízdy a zobrazit varování, pokud STK není platná nebo v průběhu termínu jízdy přestane být platná.
+
+*Akceptační kritérium AK-FP-41:* Řidič při ruční úpravě jízdy plánované na 15.11.2026 vybere vozidlo s platností STK do 14.11.2026 (nebo končící během jízdy). Systém při validaci zobrazí varování o neplatné STK v termínu jízdy. Podmínky případného potvrzení varování nebo zablokování uložení zůstávají v O-13.
+
+*Zdroj:* <<CR-01>>, ve vazbě na <<FP-24>> a <<FP-32>>.
+
+[[FP-42]]
+=== FP-42 — Blokování zahájení jízdy při neplatné STK
+
+*Priorita:* P2.
+
+*Požadavek:* Mobilní aplikace musí řidiči zablokovat zahájení přidělené jízdy podle <<FP-13>>, pokud je STK přiřazeného vozidla v okamžiku zahájení neplatná nebo přestane být platná v průběhu plánovaného termínu jízdy.
+
+*Akceptační kritérium AK-FP-42:* Řidič se v mobilní aplikaci pokusí zahájit jízdu u vozidla s již prošlou STK nebo s STK končící před plánovaným koncem jízdy. Aplikace úkon zablokuje, nezmění stav jízdy na zahájený a zobrazí důvod blokování. Pravidlo musí fungovat i v offline režimu podle <<FP-20>> na základě dříve načteného termínu platnosti STK vozidla.
+
+*Zdroj:* <<CR-01>>, ve vazbě na <<FP-13>>, <<FP-20>> a <<FP-24>>.
+
+[[FP-43]]
+=== FP-43 — E-mailové upozornění na blížící se konec platnosti STK
+
+*Priorita:* P2.
+
+*Požadavek:* Systém musí automaticky odesílat e-mailové upozornění na blížící se konec platnosti STK evidovaného vozidla před uplynutím její platnosti.
+
+*Akceptační kritérium AK-FP-43:* Při dosažení definovaného předstihu před datem konce platnosti STK u vozidla systém automaticky odešle e-mailové upozornění s identifikací vozidla a datem platnosti STK určenému příjemci. Konkrétní předstih ve dnech, příjemce a pravidla opakování řeší O-13.
+
+*Zdroj:* <<CR-01>>, ve vazbě na <<FP-24>>.
 
 == Nefunkční požadavky
 
@@ -752,6 +808,7 @@ Stav „Částečně upřesněno“ znamená, že uvedené rozhodnutí již bylo
 |O-10 |Částečně upřesněno |Web a osobní telefony řidičů s iOS a Androidem. |Verze prohlížečů a mobilních systémů, zařízení, kanál oznámení, souběžnost uživatelů, profil zátěže a odezvy. Viz FP-38, NFP-01, NFP-06, NFP-07.
 |O-11 |Otevřeno |Původním jádrem první etapy je plánování dodávek. |Přesný obsah první etapy včetně automatizace a zařazení zbývajících funkcí do etap. Odpověď na platformy toto nerozhodla.
 |O-12 |Otevřeno |Automatické plánování dodávek a automatické přidělování řidičů. |Spouštění, vstupy a pravidla výběru; cíle plánování, postup při nenalezení přípustného plánu a zdroj seznamu řidičů. Nepřidávat nepodloženou optimalizaci tras ani rezervace řidičů. Viz FP-30, FP-31.
+|O-13 |Otevřeno |Pravidla kontroly STK při plánování, zahájení jízdy a e-mailové upozornění (CR-01). |Kolik dní před vypršením STK se odesílá e-mailové upozornění a komu (Majitel / Pověřený uživatel evidence); zda může majitel při ruční změně plánu varování potvrdit a plán uložit, nebo zda je uložení také blokováno; jak se postupuje u vozidel bez zadaného data STK. Viz FP-40 až FP-43.
 |===
 
 == Kontrola souladu a pokrytí
