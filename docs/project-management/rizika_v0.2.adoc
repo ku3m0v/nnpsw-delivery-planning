@@ -1,11 +1,12 @@
 = Registr rizik
+:lang: cs
 :toc:
 :toc-title: Obsah
 :sectnums:
+:revnumber: 0.2
+:revdate: 2026-11-26
 
 Tento dokument obsahuje hlavní rizika spojená s průběhem semestrálního projektu a způsob jejich omezení.
-
-Registr rizik bude v průběhu projektu podle potřeby aktualizován.
 
 [cols="1,3,1,1,2,3,3", options="header"]
 |===
@@ -72,4 +73,20 @@ Registr rizik bude v průběhu projektu podle potřeby aktualizován.
 |Vedoucí týmu + analytici
 |Požadavky, scénáře a modely jsou průběžně verzovány a vzájemně propojeny tak, aby bylo možné zjistit dopad změny.
 |Provést analýzu dopadu změny a aktualizovat dotčené požadavky, Use Case scénáře, diagramy a další dokumentaci.
+
+|R-08
+|Selhání odeslání nebo přehlédnutí e-mailového upozornění na konec STK
+|Nízká
+|Vysoký
+|Vedoucí týmu + analytici
+|Evidovat stav odeslaných e-mailových upozornění (FP-43) bez duplicitního zasílání a viditelně zobrazovat stav platnosti STK přímo v přehledu vozidel ve webové aplikaci.
+|Zkontrolovat termíny platnosti STK v evidenci vozidel, zajistit náhradní vozidlo pro dotčené dodávky a ověřit funkčnost e-mailové brány.
+
+|R-09
+|Neaktuální údaj o platnosti STK v offline režimu mobilní aplikace
+|Střední
+|Střední
+|Analytici
+|Při každém načtení přidělených jízd aktualizovat také termín platnosti STK přiřazeného vozidla (FP-20, FP-42) a při obnovení spojení provést automatickou synchronizaci a serverovou kontrolu (FP-21).
+|Po obnovení internetového připojení provést automatickou synchronizaci aktuálních údajů vozidla a případný konflikt při zahájení jízdy oznámit majiteli k vyřešení.
 |===
