@@ -1,7 +1,10 @@
 = Slovník pojmů
+:lang: cs
 :toc:
 :toc-title: Obsah
 :sectnums:
+:revnumber: 0.2
+:revdate: 2026-11-26
 
 == Role a uživatelé systému
 
@@ -66,6 +69,9 @@ Offline režim::
 Synchronizace data:: 
   Automatický proces přenosu a sloučení změn provedených v offline režimu na centrální server po obnovení internetového připojení
 
+E-mailové upozornění (Notifikace)::
+  Automatická zpráva odesílaná Systémem na e-mail určeného příjemce při vzniku sledované události, zejména při blížícím se konci platnosti STK vozidla.
+
 Uživatelské nastavení (Personifikace):: 
   Možnost uživatele přizpůsobit si chování a vzhled aplikace (např. preferované vozidlo, výchozí pohled, jazyk rozhraní CZ/EN)
 
@@ -79,6 +85,9 @@ Auditní log / Historie::
 
 První etapa (MVP – Minimum Viable Product):: 
   Úvodní fáze realizace projektu zaměřená na klíčové funkce: plánování dodávek, hlídání kapacit a kolizí, správa STK, hlášení škod a mobilní aplikace pro řidiče
+
+Požadavek na změnu (Change Request – CR)::
+  Formálně evidovaný a posouzený návrh na úpravu přijatých požadavků nebo rozsahu projektu (např. CR-01 pro kontrolu a upozorňování na platnost STK).
 
 Webová aplikace:: 
   Hlavní část Systému přístupná přes běžný webový prohlížeč. Je určena pro Majitele a Dělníky. Slouží k plánování dodávek, správě a přehledu vozového parku, zadávání uživatelských nastavení a komunikaci s technickou podporou
